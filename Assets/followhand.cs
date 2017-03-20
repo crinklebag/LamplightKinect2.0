@@ -37,7 +37,7 @@ public class followhand : BodySourceView {
 		if (bodies == null)
 		{
 			// NOTIFY PLAYER SKELETON IS BEING BUILT
-			Debug.Log ("bodies null");
+			// Debug.Log ("bodies null");
 			lostSkeleton = true;
 			//StartCoroutine(BuildSkeleton());
 			return;
@@ -54,11 +54,10 @@ public class followhand : BodySourceView {
 				
 				//panel.SetActive (false);
 				//lostSkeleton = false;
-				Debug.Log ("Built it");
+				Debug.Log ("Tracked Joint z Pos: " + body.Joints[TrackedJoint].Position.Z);
 				if (body.Joints [TrackedJoint].Position.Z < distance) {
 					var pos = body.Joints [TrackedJoint].Position;
-
-
+                    
 					temp = new Vector3 (pos.X, pos.Y, 99);
 					ID = (int)body.TrackingId;
 					//var rot = body.Joints [TrackedJoint].Position;

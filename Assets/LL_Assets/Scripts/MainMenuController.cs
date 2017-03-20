@@ -14,8 +14,6 @@ public class MainMenuController : MonoBehaviour {
     public Image[] navButtonsBG;
     public Image[] navButtonsSong;
     public Image[] navButtonsPlay;
-    [SerializeField]
-    // private Color32[] brighterBarsColors;
     private float lerpColorTime = 0;
 
     public enum MenuState { Intro, SongSelect, BGSelect, PlayGame };
@@ -136,153 +134,86 @@ public class MainMenuController : MonoBehaviour {
         menuHolder.localPosition = Vector3.SmoothDamp(menuHolder.localPosition, newPos, ref menuVelocity, smoothTime);
     }
 
-    /*public void ButtonClick(int val)
-    {
-        lastState = currentState;
-
-        menuSFX.playTap();
-
-        switch (val)
-        {
-            case 0:
-                currentState = MenuState.Intro;
-                ResetBackgroundSelection();
-                UpdateMenuState(true);
-                break;
-            case 1:
-                currentState = MenuState.BGSelect;
-                ResetBackgroundSelection();
-                UpdateMenuState(true);
-                break;
-            case 2:
-                    currentState = MenuState.SongSelect;
-                    break;
-            case 3:
-                currentState = MenuState.PlayGame;
-                lerpColorTime = 0;
-                playButton.StartPlay();
-                // brighterBarsColors[2] = Color.white;
-
-                string sceneToSave = "";
-
-                switch (EventSystem.current.currentSelectedGameObject.name) {
-                    case "Seasons Change":
-                        sceneToSave = "Seasons Change";
-                        break;
-                    case "Get Free":
-                        sceneToSave = "Get Free";
-                        break;
-                    case "Dream Giver":
-                        sceneToSave = "Dream Giver";
-                        break;
-                    case "Spirit Speaker":
-                        sceneToSave = "Spirit Speaker";
-                        break;
-                    default:
-                        break;
-                }
-
-                Debug.Log(sceneToSave);
-
-                PlayerPrefs.SetString("sceneNumber", sceneToSave);
-                PlayerPrefs.Save();
-                break;
-            default:
-                break;
-        }
-    }*/
-
     public void ButtonClick(int val, string name)
     {
         lastState = currentState;
 
         switch (val)
         {
-            case 0:
-                {
-                    currentState = MenuState.Intro;
-                    UpdateMenuState(true);
-                }
+            // Go to main menu
+            case 0: 
+                currentState = MenuState.Intro;
+                UpdateMenuState(true);
                 break;
+                // Go to BG Select
             case 1:
-                {
-                    currentState = MenuState.BGSelect;
-                    UpdateMenuState(true);
-                }
+                currentState = MenuState.BGSelect;
+                UpdateMenuState(true);
                 break;
+                // Go to Song Select after choosing a BG
             case 2:
-                {
-                    int bgToSave = -1;
+                int bgToSave = -1;
 
-                    if (name == "Music")
-                    {
-                        currentState = MenuState.SongSelect;
-                    }
-
-                    switch (name)
-                    {
-                        case "Forest":
-                            {
-
-                                bgToSave = 2;
-                                currentState = MenuState.SongSelect;
-
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-
-                    //Debug.Log(bgToSave);
-
-                    PlayerPrefs.SetInt("bgNumber", bgToSave);
-                    PlayerPrefs.Save();
-
-                    UpdateMenuState(true);
+                if (name == "Music") {
+                    currentState = MenuState.SongSelect;
                 }
+
+                switch (name) {
+                    case "Backyard":
+                        bgToSave = 1;
+                        break;
+                    case "Deep Forest":
+                        bgToSave = 2;
+                        break;
+                    case "Waterfall":
+                        bgToSave = 2;
+                        break;
+                    case "Beach":
+                        bgToSave = 2;
+                        break;
+                    default:
+                        break;
+                }
+                
+                // Save data to player prefs
+                PlayerPrefs.SetInt("bgNumber", bgToSave);
+                PlayerPrefs.Save();
+                
+                // Update the menu
+                currentState = MenuState.SongSelect;
+                UpdateMenuState(true);
                 break;
+            // Choose a song and load the game
             case 3:
+                lerpColorTime = 0;
+                //brighterBarsColors[2] = Color.white;
+
+                int sceneToSave = -1;
+
+                switch (name)
                 {
-                    lerpColorTime = 0;
-                    //brighterBarsColors[2] = Color.white;
+                    case "Seasons Change":
+                        sceneToSave = 0;
+                        break;
+                    case "Get Free":
+                        sceneToSave = 1;
+                        break;
+                    case "Dream Giver":
+                        sceneToSave = 2;
+                        break;
+                    case "Spirit Speaker":
+                        sceneToSave = 3;
+                        break;
+                    default:
+                        break;
+                }
 
-                    int sceneToSave = -1;
+                PlayerPrefs.SetInt("sceneNumber", sceneToSave);
+                PlayerPrefs.Save();
 
-                    switch (name)
-                    {
-                        case "Seasons Change":
-                            {
-                                sceneToSave = 0;
-                            }
-                            break;
-                        case "Get Free":
-                            {
-                                sceneToSave = 1;
-                            }
-                            break;
-                        case "Dream Giver":
-                            {
-                                sceneToSave = 2;
-                            }
-                            break;
-                        case "Spirit Speaker":
-                            {
-                                sceneToSave = 3;
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-
-                    //Debug.Log(sceneToSave);
-
-                    PlayerPrefs.SetInt("sceneNumber", sceneToSave);
-                    PlayerPrefs.Save();
-
-                    if (startGame == false)
-                    {
-                        startGame = true;
-                    }
+                if (startGame == false)
+                {
+                    startGame = true;
                 }
                 break;
             default:
@@ -307,13 +238,7 @@ public class MainMenuController : MonoBehaviour {
         if (PlayerPrefs.GetInt("bgNumber") != -1 && PlayerPrefs.GetString("sceneNumber") != "")
         {
             SceneManager.LoadScene("Loading");
-        } else
-        {
-            // Debug.Log("You missed a selection!!");
-
-            // Debug.Log("bgNumber " + PlayerPrefs.GetInt("bgNumber"));
-            // Debug.Log("sceneNumber " + PlayerPrefs.GetInt("sceneNumber"));
-
+        } else {
             startGame = false;
         }
     }

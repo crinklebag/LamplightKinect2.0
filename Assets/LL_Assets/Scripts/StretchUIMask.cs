@@ -3,23 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/*
-    TODO:
-    Turn off all of the buttons once a bg is selected
-    turn on all the buttons if the player decides to go back
-    stop moving the location image - only move the text overlay
-    shrink when player decides they want to pick dif bg
-    set a variable that will select which bg the player has chosen
-    load appropriate scene
-*/
-
 public class StretchUIMask : MonoBehaviour {
 
     MainMenuController mainMenuController;
 
     [SerializeField] int orderInLayer;
     [SerializeField] int sceneNumber;
-    [SerializeField] GameObject buttons;
 
     bool selected = false;
 
@@ -63,12 +52,7 @@ public class StretchUIMask : MonoBehaviour {
         }
 
         Debug.Log(mainMenuController.GetCurrentState());
-
-        if (mainMenuController.GetCurrentState() == 2) {
-            buttons.SetActive(true);
-        } else {
-            buttons.SetActive(false);
-        }
+        
     }
 
     public void ChooseLocation() {

@@ -4,6 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+/*
+ 
+    TODO:
+    Load the scene - cannot test until it is set up
+    Figure out why the layer mask is being an idiot - Turn off other layer mask object and BGs once selected
+    Set up Player Boundaries
+     
+*/
+
 public class MenuFly : MonoBehaviour
 {
 
@@ -19,9 +28,11 @@ public class MenuFly : MonoBehaviour
     bool glowing = false;
     // Use this for initialization
 
-    [SerializeField]
-    GameObject menuController;
-
+    [SerializeField] GameObject menuController;
+    [SerializeField] GameObject backyardLayerMask;
+    [SerializeField] GameObject deepWoodsLayerMask;
+    [SerializeField] GameObject watrefallLayerMask;
+    [SerializeField] GameObject beachLayerMask;
 
 
     void OnTriggerStay2D(Collider2D col)
@@ -33,8 +44,6 @@ public class MenuFly : MonoBehaviour
             Glow(col.gameObject);
             obj = col.gameObject.GetComponent<Image>();
         }
-
-
     }
 
     void OnTriggerEnter2D(Collider2D col)
@@ -42,8 +51,6 @@ public class MenuFly : MonoBehaviour
         if (col.gameObject.CompareTag("Button"))
         {
             col.gameObject.GetComponent<KinectButton>().setFade(false);
-
-
         }
     }
 
@@ -62,59 +69,63 @@ public class MenuFly : MonoBehaviour
     void Update()
     {
 
-
-        /*if (!glowing)
-        {
-            glowlevel2 = Mathf.Lerp(glowlevel, 0.0f, Time.deltaTime);
-        }
-        Color tempColor = this.GetComponent<SpriteRenderer> ().color;
-		tempColor.a = glowlevel;
-		
-		this.GetComponent<SpriteRenderer> ().color = tempColor;
-        if (obj == null)
-        {
-            return;
-        }
-        obj.color = tempColor;*/
-
         //ALL FOR MENUS STUFFS
-
         if (playtime <= 0)
         {
-            Debug.Log("here");
-            if (obj.name == "Kinect Forest Button")
-            {
-                Debug.Log("here");
-                menuController.GetComponent<MainMenuController>().ButtonClick(2, "Forest");
-
-            }
-            if (obj.name == "Start Game")
-            {
+            if (obj.name == "Start Game") {
                 menuController.GetComponent<MainMenuController>().ButtonClick(1, "");
-                Debug.Log("whatshappening");
             }
 
-            if (obj.name == "SongKinectButton1")
-            {
-                menuController.GetComponent<MainMenuController>().ButtonClick(3, "Seasons Change");
-            }
+            SelectLevel();
+            SelectSong();
+        }
+    }
 
-            if (obj.name == "SongKinectButton2")
-            {
-                menuController.GetComponent<MainMenuController>().ButtonClick(3, "Get Free");
-            }
-
-            if (obj.name == "SongKinectButton3")
-            {
-                menuController.GetComponent<MainMenuController>().ButtonClick(3, "Dream Giver");
-            }
-
-            if (obj.name == "SongKinectButton4")
-            {
-                menuController.GetComponent<MainMenuController>().ButtonClick(3, "Spirit Speaker");
-            }
+    void SelectSong() {
+        // Song Selection
+        if (obj.name == "Seasons Change")
+        {
+            menuController.GetComponent<MainMenuController>().ButtonClick(3, "Seasons Change");
         }
 
+        if (obj.name == "Get Free")
+        {
+            menuController.GetComponent<MainMenuController>().ButtonClick(3, "Get Free");
+        }
+
+        if (obj.name == "Dream Giver")
+        {
+            menuController.GetComponent<MainMenuController>().ButtonClick(3, "Dream Giver");
+        }
+
+        if (obj.name == "Spirit Speaker")
+        {
+            menuController.GetComponent<MainMenuController>().ButtonClick(3, "Spirit Speaker");
+        }
+    }
+
+    void SelectLevel() {
+        // Background Selection
+        if (obj.name == "Backyard Button")
+        {
+            menuController.GetComponent<MainMenuController>().ButtonClick(2, "Backyard");
+            backyardLayerMask.GetComponent<StretchUIMask>().ChooseLocation();
+        }
+        if (obj.name == "Deep Forest Button")
+        {
+            menuController.GetComponent<MainMenuController>().ButtonClick(2, "Deep Forest");
+            deepWoodsLayerMask.GetComponent<StretchUIMask>().ChooseLocation();
+        }
+        if (obj.name == "Waterfall Button")
+        {
+            menuController.GetComponent<MainMenuController>().ButtonClick(2, "Waterfall");
+            watrefallLayerMask.GetComponent<StretchUIMask>().ChooseLocation();
+        }
+        if (obj.name == "Beach Button")
+        {
+            menuController.GetComponent<MainMenuController>().ButtonClick(2, "Beach");
+            beachLayerMask.GetComponent<StretchUIMask>().ChooseLocation();
+        }
     }
 
     void Glow(GameObject col)
