@@ -4,7 +4,8 @@ using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 
-public class UI : MonoBehaviour {
+public class UI : MonoBehaviour
+{
 
     public enum IngameMenuStates
     {
@@ -21,10 +22,10 @@ public class UI : MonoBehaviour {
     //public Image fireflyJarMultiplier;
 
     public Text bugsCaughtFG;
-	public Text jarsFilledFG;
-	public Text totalScoreMulFG;
+    public Text jarsFilledFG;
+    public Text totalScoreMulFG;
     public Text totalScoreFG;
-	
+
 
 
     public Image FGOverlay;
@@ -34,8 +35,10 @@ public class UI : MonoBehaviour {
 
     public ParticleSystem[] crackedJarFireflies;
 
-    [SerializeField] public SpriteRenderer[] glows;
-    [SerializeField] public SpriteRenderer[] jars;
+    [SerializeField]
+    public SpriteRenderer[] glows;
+    [SerializeField]
+    public SpriteRenderer[] jars;
 
     public Sprite[] jarImages; // 0 = not cracked, 1 = a little crack, 2 = halfway, 3 = broken
     //public Sprite[] jarImagesMultiplier; // 0 = not cracked, 1 = a little crack, 2 = halfway, 3 = broken
@@ -43,28 +46,43 @@ public class UI : MonoBehaviour {
     public GameObject[] brokenHalfJars;
     public GameObject am;
 
-    [SerializeField] GameController gc;
+    [SerializeField]
+    GameController gc;
 
-    [SerializeField] private Color32[] currentColor;
-    [SerializeField] private Color32[] previousColor;
+    [SerializeField]
+    private Color32[] currentColor;
+    [SerializeField]
+    private Color32[] previousColor;
 
-    [SerializeField] float[] fireflyColorConvert;
-    [SerializeField] float[] jarsY;
-    [SerializeField] float lerpColorTime = 0;
-    [SerializeField] float fireflyColorConvertUI;
+    [SerializeField]
+    float[] fireflyColorConvert;
+    [SerializeField]
+    float[] jarsY;
+    [SerializeField]
+    float lerpColorTime = 0;
+    [SerializeField]
+    float fireflyColorConvertUI;
     float jarsYLerpTime = 0;
 
-    [SerializeField] int score = 0;
-    [SerializeField] int totalScore = 0;
-    [SerializeField] int tempScoreCounter = 0;
+    [SerializeField]
+    int score = 0;
+    [SerializeField]
+    int totalScore = 0;
+    [SerializeField]
+    int tempScoreCounter = 0;
 
-    [SerializeField] bool startJarParticles = false;
-    [SerializeField] bool hasTouchedAtEnd = false;
-    [SerializeField] bool[] jarsYSetAlready;
+    [SerializeField]
+    bool startJarParticles = false;
+    [SerializeField]
+    bool hasTouchedAtEnd = false;
+    [SerializeField]
+    bool[] jarsYSetAlready;
 
-    [SerializeField] bool[] jarsPulseAlready;
+    [SerializeField]
+    bool[] jarsPulseAlready;
 
-    [SerializeField] bool calledCountUpCoroutine = false;
+    [SerializeField]
+    bool calledCountUpCoroutine = false;
 
     void Awake()
     {
@@ -73,7 +91,7 @@ public class UI : MonoBehaviour {
         jarsY = new float[jars.Length];
         fireflyColorConvert = new float[jars.Length];
         jarsYSetAlready = new bool[jars.Length];
-        jarsPulseAlready = new bool[jars.Length];		
+        jarsPulseAlready = new bool[jars.Length];
 
         for (int i = 0; i < jars.Length; i++)
         {
@@ -90,14 +108,16 @@ public class UI : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         gc = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 
         SetJarYPos(0);
     }
 
     // Update is called once per frame
-    void Update () {
+    void Update()
+    {
 
         lerpColorTime = (lerpColorTime += Time.deltaTime) / 1f;
 
@@ -198,7 +218,7 @@ public class UI : MonoBehaviour {
             {
                 fireflyColorConvert[i] = 0;
                 previousColor[i] = glows[i].color;
-                currentColor[i] = new Color32(255,255,255, (byte)fireflyColorConvert[i]);
+                currentColor[i] = new Color32(255, 255, 255, (byte)fireflyColorConvert[i]);
 
                 brokenHalfJars[i].SetActive(true);
                 brokenHalfJars[i].GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-30, 30), Random.Range(-30, -10)));
@@ -207,8 +227,9 @@ public class UI : MonoBehaviour {
             }
         }
     }
-    
-    public void AddBug(int bugNumber) {
+
+    public void AddBug(int bugNumber)
+    {
         lerpColorTime = 0;
         score += 10;
 
@@ -233,8 +254,8 @@ public class UI : MonoBehaviour {
         }
 
         previousColor[bugNumber] = glows[bugNumber].color;
-        
-        currentColor[bugNumber] = new Color32(255, 255, 255,(byte)fireflyColorConvert[bugNumber]);
+
+        currentColor[bugNumber] = new Color32(255, 255, 255, (byte)fireflyColorConvert[bugNumber]);
 
         jars[bugNumber].GetComponent<JarPulse>().SetPulse(true);
     }
@@ -264,39 +285,39 @@ public class UI : MonoBehaviour {
         }
 
         previousColor[bugNumber] = glows[bugNumber].color;
-        
+
         currentColor[bugNumber] = new Color32(255, 255, 255, (byte)fireflyColorConvert[bugNumber]);
-        
+
     }
 
-    public void FinishGame (int multiplier)
-	{
-		bugsCaughtFG.text = (score/10).ToString();
-		jarsFilledFG.text = multiplier.ToString ();
+    public void FinishGame(int multiplier)
+    {
+        bugsCaughtFG.text = (score / 10).ToString();
+        jarsFilledFG.text = multiplier.ToString();
 
         FGOverlay.gameObject.SetActive(true);
 
         if (multiplier > 0)
         {
-			totalScoreMulFG.text = score.ToString () + " x " + multiplier.ToString ();
-			totalScoreFG.text = tempScoreCounter.ToString ();
+            totalScoreMulFG.text = score.ToString() + " x " + multiplier.ToString();
+            totalScoreFG.text = tempScoreCounter.ToString();
             totalScore = score * multiplier;
-			
+
         }
         else
         {
-			totalScoreMulFG.text = tempScoreCounter.ToString ();
-			totalScoreFG.text = "";
+            totalScoreMulFG.text = tempScoreCounter.ToString();
+            totalScoreFG.text = "";
             totalScore = score;
         }
 
-		if (!calledCountUpCoroutine)
-		{
-			StartCoroutine("CountUpScore");
-			calledCountUpCoroutine = true;
-		}
+        if (!calledCountUpCoroutine)
+        {
+            StartCoroutine("CountUpScore");
+            calledCountUpCoroutine = true;
+        }
 
-        
+
     }
 
     public void SetHasTouchedAtEnd(bool val)
@@ -306,22 +327,26 @@ public class UI : MonoBehaviour {
 
     IEnumerator CountUpScore()
     {
-		yield return new WaitForSecondsRealtime(0.001f);
+        yield return new WaitForSecondsRealtime(0.001f);
 
-		while (tempScoreCounter < totalScore)
-		{
+        while (tempScoreCounter < totalScore)
+        {
             if (hasTouchedAtEnd)
             {
                 break;
             }
 
-            tempScoreCounter++;
+            tempScoreCounter+=10;
 
-			yield return new WaitForSecondsRealtime(0.001f);
-		}
+            yield return new WaitForSecondsRealtime(0.001f);
+        }
 
         tempScoreCounter = totalScore;
         exitButtonFG.SetActive(true);
+
+        yield return new WaitForSeconds(3.0f);
+
+        gc.ReturnToMenu();
     }
 
     public void CallPause()

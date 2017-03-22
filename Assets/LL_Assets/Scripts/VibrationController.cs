@@ -8,11 +8,11 @@ public class VibrationController : MonoBehaviour {
 	{
 		if (Application.platform == RuntimePlatform.Android) 
 		{
-			Handheld.Vibrate();
+			// Handheld.Vibrate();
 		}
 		else if(Application.platform == RuntimePlatform.IPhonePlayer)
 		{
-			Handheld.Vibrate();
+			// Handheld.Vibrate();
 		}
 	}
 }

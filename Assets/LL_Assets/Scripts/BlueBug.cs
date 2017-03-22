@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EvilBug : MonoBehaviour {
+public class BlueBug : MonoBehaviour {
 
 	private GameController gameController;
 
@@ -42,7 +42,7 @@ public class EvilBug : MonoBehaviour {
 	//Call to start life cycle
 	public void StartBugLyfeCoroutine (float inT, float arT, float outT)
 	{
-		
+	
 
 		//StartCoroutine(RandomPosition());
 		StartCoroutine(BugLyfe(inT, arT, outT));
@@ -145,8 +145,8 @@ public class EvilBug : MonoBehaviour {
 
 			//TODO: Disable Collider? or end lyfe cycle?
 
-			gameController.CrackJar();
-		//	gameController.GetComponent<VibrationController>().Vibrate();
+			gameController.makeLotsOfBugs();
+			//gameController.GetComponent<VibrationController>().Vibrate(); ?????
 		}
 	}
 }
