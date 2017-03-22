@@ -49,6 +49,7 @@ public class MainMenuController : MonoBehaviour {
     void Update() {
         MoveUI();
         UpdateTopBar();
+        // LoadScene();
 
         lerpColorTime += (Time.deltaTime * 0.2f);
 
@@ -188,28 +189,32 @@ public class MainMenuController : MonoBehaviour {
                 lerpColorTime = 0;
                 //brighterBarsColors[2] = Color.white;
 
-                int sceneToSave = -1;
+                string sceneToSave = "";
 
                 switch (name)
                 {
                     case "Seasons Change":
-                        sceneToSave = 0;
+                        sceneToSave = "Seasons Change";
+                        Debug.Log("Seasons change song choose11");
                         break;
                     case "Get Free":
-                        sceneToSave = 1;
+                        sceneToSave = "Get Free";
                         break;
                     case "Dream Giver":
-                        sceneToSave = 2;
+                        sceneToSave = "Dream Giver";
                         break;
                     case "Spirit Speaker":
-                        sceneToSave = 3;
+                        sceneToSave = "Spirit Speaker";
                         break;
                     default:
                         break;
                 }
 
-                PlayerPrefs.SetInt("sceneNumber", sceneToSave);
+                Debug.Log("Song found: " + sceneToSave);
+
+                PlayerPrefs.SetString("sceneNumber", sceneToSave);
                 PlayerPrefs.Save();
+                LoadScene();
 
                 if (startGame == false)
                 {
@@ -234,6 +239,8 @@ public class MainMenuController : MonoBehaviour {
     public void LoadScene()
     {
         //
+        Debug.Log(PlayerPrefs.GetInt("bgNumber"));
+        Debug.Log(PlayerPrefs.GetString("sceneNumber"));
 
         if (PlayerPrefs.GetInt("bgNumber") != -1 && PlayerPrefs.GetString("sceneNumber") != "")
         {

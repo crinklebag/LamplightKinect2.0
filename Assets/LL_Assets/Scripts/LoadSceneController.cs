@@ -20,20 +20,20 @@ public class LoadSceneController : MonoBehaviour {
         switch (PlayerPrefs.GetInt("bgNumber"))
         {
             case 1:
-                SceneManager.LoadScene("Main_Mobile");
+                SceneManager.LoadScene("DeepForest");
                 //GetComponent<LoadingScreen>().LoadScene("Main_Mobile");
                 break;
             case 2:
-                SceneManager.LoadScene("Main_Mobile_DeepForest");
+                SceneManager.LoadScene("DeepForest");
                 // SceneManager.LoadScene("Main_Mobile");
                 //GetComponent<LoadingScreen>().LoadScene("Main_Mobile");
                 break;
             case 3:
-                SceneManager.LoadScene("Main_Mobile_DeepForest");
+                SceneManager.LoadScene("Waterfall");
                 //GetComponent<LoadingScreen>().LoadScene("Main_Mobile_DeepForest");
                 break;
             case 4:
-                SceneManager.LoadScene("Main_Mobile_DeepForest");
+                SceneManager.LoadScene("Waterfall");
                 //GetComponent<LoadingScreen>().LoadScene("Main_Mobile_DeepForest");
                 break;
         }

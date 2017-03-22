@@ -86,6 +86,7 @@ public class MenuFly : MonoBehaviour
         if (obj.name == "Seasons Change")
         {
             menuController.GetComponent<MainMenuController>().ButtonClick(3, "Seasons Change");
+            Debug.Log("Seasons change song choose");
         }
 
         if (obj.name == "Get Free")

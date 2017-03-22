@@ -160,7 +160,7 @@ public class GameController : MonoBehaviour
     public void FinishGameTime()
     {
         stopDoingThis = true;
-		player.GetComponent<Drag>().SetEndGame (true);
+		player.GetComponent<followhand>().SetEndGame (true);
         StopAllCoroutines();
         Destroy(player.GetComponent<Jar>());
         Destroy(player.GetComponent<BoxCollider2D>());
@@ -173,7 +173,7 @@ public class GameController : MonoBehaviour
     public void FinishGameDie()
     {
         stopDoingThis = true;
-        player.GetComponent<Drag>().SetEndGame(true);
+        player.GetComponent<followhand>().SetEndGame(true);
         StopAllCoroutines();
         Destroy(player.GetComponent<Jar>());
         Destroy(player.GetComponent<BoxCollider2D>());
@@ -182,6 +182,7 @@ public class GameController : MonoBehaviour
         uiController.ResetGlow();
         pauseButton.SetActive(false);
     }
+
 
     public void ReleaseBug(int bugNumber)
     {
@@ -255,7 +256,7 @@ public class GameController : MonoBehaviour
         if (jarCurrentDamage <= jarDamageLimit)
         {
             uiController.setJarImage(jarCurrentDamage);
-            player.GetComponent<Drag>().FlashJar();
+            player.GetComponent<followhand>().FlashJar();
         }
 
 
@@ -287,7 +288,7 @@ public class GameController : MonoBehaviour
     {
         hitAlready = true;
 
-        StartCoroutine(player.GetComponent<Drag>().FlashJar());
+        StartCoroutine(player.GetComponent<followhand>().FlashJar());
 
         yield return new WaitForSecondsRealtime(2.5f);
 

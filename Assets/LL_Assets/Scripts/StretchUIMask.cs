@@ -51,7 +51,7 @@ public class StretchUIMask : MonoBehaviour {
             ChooseLocation();
         }
 
-        Debug.Log(mainMenuController.GetCurrentState());
+        // Debug.Log(mainMenuController.GetCurrentState());
         
     }
 
