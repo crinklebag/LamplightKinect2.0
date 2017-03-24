@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof (AudioSource))]
 public class AudioPeer : MonoBehaviour {
 
-	//private string path = @"D:\Text\test.txt";
+    //private string path = @"D:\Text\test.txt";
 
-	private AudioSource _audioSource;
+    private AudioSource _audioSource;
 	public static float[] _samples = new float[512];	//20,000 hz into 512 samples
 
 	public static float[] _freqBands = new float[8];	//512 samples to 8 freq bands
@@ -50,13 +51,18 @@ public class AudioPeer : MonoBehaviour {
 		//beatTimes = new Queue<float>();
 	}
 
+    void FixedUpdate()
+    {
+        GetSpectrumAudioSource();
+        MakeFreqBands();
+        BandBuffer();
+        CreateAudioBands();
+        GetAmplitude();
+    }
+
 	void Update () 
 	{
-		GetSpectrumAudioSource();
-		MakeFreqBands();
-		BandBuffer();
-		CreateAudioBands();
-		GetAmplitude();
+		
 		//AudioClipTick();
 		//DetectBeat();
 		//PredictBPM();
@@ -192,7 +198,7 @@ public class AudioPeer : MonoBehaviour {
 		_amplitudeBuffer = _currentAmplitudeBuffer / _amplitudeHighest;
 	}
 
-	/*
+    /*
 	//Reset each frequency band's highest value, used for changing songs
 	//Reset current audio clip time in milliseconds as well
 	//Clear beatTimes Queue..

@@ -174,7 +174,7 @@ public class BackgroundScroller : MonoBehaviour
 
         if (y <= -0.999f && startScroll)
         {
-            GameObject.Find("GameController").GetComponent<GameController>().FinishGameTime();
+           // GameObject.Find("GameController").GetComponent<GameController>().FinishGameTime();
             startScroll = false;
             //Debug.Log("Called GAMECONTROLLER FinishGameTime");
             return;

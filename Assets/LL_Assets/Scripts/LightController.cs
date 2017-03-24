@@ -74,7 +74,7 @@ public class LightController : MonoBehaviour {
         previousColorGodRod1 = godRod1Color;
         previousColorGodRod2 = godRod2Color;
 
-        b = GameObject.FindGameObjectWithTag("Scaler").GetComponent<Scaler>().GetBounds();
+     //   b = GameObject.FindGameObjectWithTag("Scaler").GetComponent<Scaler>().GetBounds();
 
         lerpPositionRandomNumber1 = Random.Range(clipLength / 4.0f, clipLength);
         lerpPositionRandomNumber2 = Random.Range(clipLength / 4.0f, clipLength);
@@ -97,7 +97,7 @@ public class LightController : MonoBehaviour {
             {
                 if (!endSong)
                 {
-                    GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().FinishGameTime();
+                    GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().FinishGame();
                     endSong = true;
                 }
 

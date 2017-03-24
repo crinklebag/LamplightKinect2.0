@@ -63,6 +63,6 @@ public class Flicker : MonoBehaviour {
 		}
 		if (!_useLerp) {
 			this.transform.localScale = new Vector3 ((AudioPeer._audioBandBuffer[_band] * _scaleMultiplier) + _startScale, (AudioPeer._audioBandBuffer[_band] * _scaleMultiplier) + _startScale, 1.0f);
-		}
+        }
 	}
 }

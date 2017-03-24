@@ -8,7 +8,6 @@ using System.Text;
 [RequireComponent(typeof(AudioSource))]
 public class AudioManager : MonoBehaviour
 {
-
     [SerializeField]
     private AudioSource subASource;
 
@@ -70,7 +69,7 @@ public class AudioManager : MonoBehaviour
     public IEnumerator StartAudio()
     {
         //Set song index to selected index, set audio clip for audio source, set clip length for countdown, set the beat counter back to 0 and the time between beats for BPM detection
-        aSource.clip = Resources.Load<AudioClip>("Audio/" + PlayerPrefs.GetString("sceneNumber"));
+        aSource.clip = Resources.Load<AudioClip>("DemoSongs/" + PlayerPrefs.GetString("sceneNumber"));
         clipLength = aSource.clip.length;
         beatCounter = 0;
 
@@ -270,4 +269,6 @@ public class AudioManager : MonoBehaviour
 
         yield return null;
     }
+
+
 }

@@ -21,8 +21,17 @@ public class BlueBug : MonoBehaviour {
 	private float angle;
 	private Quaternion rot;
 
+    [SerializeField]
+    GameObject glow;
+    [SerializeField]
+    GameObject sprite;
+    //[SerializeField]
+  // GameObject hitParticle;
+
     [SerializeField] float speed = 1.25f;
     [SerializeField] float rotSpeed = 5.0f;
+
+    private bool beenHit = false;
 
     AudioSFX aSFX;
 
@@ -142,11 +151,22 @@ public class BlueBug : MonoBehaviour {
 		if (other.gameObject.CompareTag("JarTop"))
 		{
 			aSFX.playDodo();
-
+            endLyfe();
 			//TODO: Disable Collider? or end lyfe cycle?
 
 			gameController.makeLotsOfBugs();
 			//gameController.GetComponent<VibrationController>().Vibrate(); ?????
 		}
 	}
+
+
+    //turn sprites off and turn particle effect on
+    void endLyfe()
+    {
+        glow.SetActive(false);
+        sprite.SetActive(false);
+
+      //  GameObject BlueParticle = Instantiate(hitParticle) as GameObject;
+      //  BlueParticle.transform.position = this.transform.position;
+    }
 }
