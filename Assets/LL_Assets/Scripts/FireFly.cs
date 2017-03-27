@@ -6,31 +6,21 @@ public class FireFly : MonoBehaviour
 {
 
     public GameObject fireflySparklePrefab;
+    [SerializeField] GameObject captureParticles;
 
     GameController gameController;
-    [SerializeField]
-    GameObject[] jars;
-    //[SerializeField] Light bugLight;
-    [SerializeField]
-    GameObject image;
-    [SerializeField]
-    GameObject glow;
-    [SerializeField]
-    GameObject particles;
-    [SerializeField]
-    float speed = 0.05f;
-    [SerializeField]
-    float rotSpeed = 2.5f;
-    [SerializeField]
-    GameObject destination;
+    [SerializeField] GameObject[] jars;
+    [SerializeField] GameObject image;
+    [SerializeField] GameObject glow;
+    [SerializeField] GameObject particles;
+    [SerializeField] float speed = 0.05f;
+    [SerializeField] float rotSpeed = 2.5f;
+    [SerializeField] GameObject destination;
+    [SerializeField] GameObject spotLight;
+    [SerializeField] ParticleSystem fireflyShimmer;
 
     public bool isOn;
-    [SerializeField]
-    bool caught = false;
-    //float lightMin = 0.3f;
-    //float lightMax = 0.8f;
-    //float maxWaitTime = 6.0f;
-    //float minWaitTime = 2.0f;
+    [SerializeField] bool caught = false;
     float minMoveX = -10.0f;
     float maxMoveX = 10.0f;
     float minMoveY = -5.5f;
@@ -42,8 +32,7 @@ public class FireFly : MonoBehaviour
     private float angle;
     private Quaternion rot;
 
-    [SerializeField]
-    float freqMoveThresh;
+    [SerializeField] float freqMoveThresh;
 
     private float timeTillNewPosition;
 
@@ -51,6 +40,8 @@ public class FireFly : MonoBehaviour
     float startTime = 0;
     float journeyLength = 0;
     bool setDest = false;
+    bool canBounceGlow = false;
+    bool increaseGlow = false;
 
     int randJar = 0;
 
@@ -58,24 +49,11 @@ public class FireFly : MonoBehaviour
     void Start()
     {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-
-      //  minMoveX = gameController.Bounds[2];
-     //   minMoveY = gameController.Bounds[0];
-      //  maxMoveX = gameController.Bounds[3];
-      //  maxMoveY = gameController.Bounds[1];
-
-        //StartCoroutine("ChoosePath");
+        
         StartCoroutine("RandomPosition");
         StartCoroutine(ChangeState());
 
-        destination = GameObject.Find("Destination");
-
-        jars = new GameObject[5];
-        jars[0] = GameObject.Find("Jar1");
-        jars[1] = GameObject.Find("Jar2");
-        jars[2] = GameObject.Find("Jar3");
-        jars[3] = GameObject.Find("Jar4");
-        jars[4] = GameObject.Find("Jar5");
+        jars = GameObject.FindGameObjectsWithTag("jar");
 
         image.SetActive(false);
     }
@@ -84,64 +62,12 @@ public class FireFly : MonoBehaviour
     public void startFireflyLife()
     {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-
-        for (int i = 0; i < gameController.BoundsGameObjects.Length; i++)
-        {
-            Physics2D.IgnoreCollision(gameController.BoundsGameObjects[i].GetComponent<Collider2D>(), this.GetComponent<Collider2D>());
-        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        SetDestination();
-
-        if (caught)
-        {
-            // if (this.transform.position.x < destination.transform.position.x - 0.1f)
-            //  {
-            this.transform.position = Vector3.MoveTowards(this.transform.position, destination.transform.position, 10 * Time.deltaTime);
-
-            if ((this.transform.position.x < destination.transform.position.x - 0.01f || this.transform.position.x > destination.transform.position.x + 0.01f) &&
-                (this.transform.position.y < destination.transform.position.y - 0.01f || this.transform.position.y > destination.transform.position.y + 0.01f))
-            {
-                //Debug.Log("Travelling");
-                float distCovered = (Time.time - startTime) * speed;
-                float fracJourney = distCovered / journeyLength;
-                this.transform.position = Vector3.MoveTowards(this.transform.position, destination.transform.position, fracJourney);
-            }
-            else
-            {
-                //Debug.Log("Light intensity: " + destination.GetComponentInChildren<Light>().intensity);
-                //Debug.Log("Max Light intensity: " + maxLightIntensity);
-
-                gameController.CatchBug(randJar);
-                Destroy(this.gameObject);
-            }
-            //  }
-
-            /*newPos = destination.transform.position;
-
-            if (transform.position.x == newPos.x && transform.position.y == newPos.y)
-            {
-                Debug.Log("Light intensity: " + destination.GetComponentInChildren<Light>().intensity);
-                Debug.Log("Max Light intensity: " + maxLightIntensity);
-                if (destination.GetComponentInChildren<Light>().intensity < maxLightIntensity)
-                {
-                    Debug.Log("Lighting");
-                    float newLightIntensity = destination.GetComponentInChildren<Light>().intensity + Vector3.Distance(this.transform.position, newPos) / 10;
-                    destination.GetComponentInChildren<Light>().intensity = newLightIntensity;
-                }
-
-                if (destination.GetComponentInChildren<Light>().intensity == maxLightIntensity)
-                {
-                    gameController.CatchBug("Firefly");
-                    Destroy(this.gameObject);
-                }
-            }*/
-
-        }
-        else
+        if (!caught)
         {
             moveBug();
         }
@@ -149,31 +75,35 @@ public class FireFly : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        /*if(other.gameObject.CompareTag("JarTop")){
-            Debug.Log("Hit Jar Top");
-        }*/
 
-        if (other.gameObject.CompareTag("JarTop") && isOn && GameObject.FindGameObjectWithTag("UIController").GetComponent<UI>().JarsYSetAlready[randJar] == true)
-        {
+        if (other.gameObject.CompareTag("JarTop") && isOn) {
 
             GameObject fireflySparkle = GameObject.Instantiate(fireflySparklePrefab);
-
+            SetDestination();
             //Debug.Log("Hit Jar Top Trigger Enter");
-            // gameController.CatchBug("Firefly");
             caught = true;
             // Turn off bug and glow
             image.SetActive(false);
             glow.SetActive(false);
-            // turn particles on
-            particles.SetActive(true);
-            // turn the collider into a trigger
-            this.GetComponent<CircleCollider2D>().enabled = false;
-            // Play Sound
-            //this.GetComponent<AudioSource>().Play();
-            // Calculate the journey length and get the start pos
+            spotLight.SetActive(false);
+            fireflyShimmer.Stop();
+
+            // Tell the gc you caught a bug
+            gameController.CatchBug();
+
+            // Calculate the journey length and get the start pos - this should be done in the particle or sent to the particle??
             startMarker = this.transform.position;
             startTime = Time.time;
-            journeyLength = Vector3.Distance(startMarker, destination.transform.position);
+            
+            // Instantiate particles and send them on a journey
+            GameObject newCaptureParticles = GameObject.Instantiate(captureParticles, this.transform.position, Quaternion.identity);
+            newCaptureParticles.GetComponent<CaptureParticleController>().SetDestination(startMarker, destination.transform.position);
+
+            // Add a bug to the randomly selected jar
+            destination.GetComponent<JarController>().AddBug();
+
+            // Destroy the bug
+            Destroy(this.gameObject);
         }
     }
 
@@ -181,18 +111,14 @@ public class FireFly : MonoBehaviour
     {
         setDest = true;
         randJar = gameController.WhichJar();
-        //Debug.Log(randJar);
         destination = jars[randJar];
     }
 
-    void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Dragonfly") && isOn)
-        {
-            //Debug.Log("Hit Dragonfly");
-            //Destroy(other.gameObject);
-            Destroy(this.gameObject);
-            //gameController.CatchBug("Firefly");
+    void BounceGlow() {
+        if (increaseGlow) {
+
+        } else {
+
         }
     }
 
@@ -252,11 +178,19 @@ public class FireFly : MonoBehaviour
         {
             // Debug.Log("Turning Off");
             image.SetActive(false);
+            // Turn off Light
+            spotLight.gameObject.SetActive(true);
+            // Stop Particles
+            fireflyShimmer.Play();
         }
         else
         {
             // Debug.Log("Turning On");
             image.SetActive(true);
+            // Turn on light
+            spotLight.gameObject.SetActive(false);
+            // Start particles
+            fireflyShimmer.Stop();
         }
         yield return new WaitForSeconds(0.1f);
         StartCoroutine(ChangeState());

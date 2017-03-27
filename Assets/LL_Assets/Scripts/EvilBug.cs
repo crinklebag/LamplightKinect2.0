@@ -22,12 +22,9 @@ public class EvilBug : MonoBehaviour {
 	private Quaternion rot;
 
 
-    [SerializeField]
-    GameObject glow;
-    [SerializeField]
-    GameObject sprite;
-    //[SerializeField]
-   // GameObject hitParticle;
+    [SerializeField] GameObject glow;
+    [SerializeField] GameObject sprite;
+    [SerializeField] GameObject hitParticle;
 
     [SerializeField] float speed = 1.25f;
     [SerializeField] float rotSpeed = 5.0f;
@@ -53,9 +50,6 @@ public class EvilBug : MonoBehaviour {
 	//Call to start life cycle
 	public void StartBugLyfeCoroutine (float inT, float arT, float outT)
 	{
-		
-
-		//StartCoroutine(RandomPosition());
 		StartCoroutine(BugLyfe(inT, arT, outT));
 	}
 
@@ -159,8 +153,9 @@ public class EvilBug : MonoBehaviour {
             {
                 aSFX.playDodo();
                 endLyfe();
-                gameController.makeLotsOfBugs();
-                //gameController.GetComponent<VibrationController>().Vibrate(); ?????
+                gameController.CrackJar();
+                // gameController.makeLotsOfBugs();
+                // gameController.GetComponent<VibrationController>().Vibrate(); ?????
             }
         }
     }
@@ -172,7 +167,7 @@ public class EvilBug : MonoBehaviour {
         glow.SetActive(false);
         sprite.SetActive(false);
 
-       // GameObject BlueParticle = Instantiate(hitParticle) as GameObject;
-       // BlueParticle.transform.position = this.transform.position;
+       GameObject RedParticle = Instantiate(hitParticle) as GameObject;
+       RedParticle.transform.position = this.transform.position;
     }
 }

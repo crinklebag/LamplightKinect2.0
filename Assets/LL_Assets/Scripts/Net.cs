@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Jar : MonoBehaviour {
+public class Net : MonoBehaviour {
 
     [SerializeField] float boostForce;
     [SerializeField] float rotationSpeed = 5;
@@ -44,13 +44,7 @@ public class Jar : MonoBehaviour {
             return true;
         else return false;
     }
-    /*
-    public void ChangeSprite(int val) {
-        jarImage.GetComponent<SpriteRenderer>().sprite = jarImages[val];
-        jarImage.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-        jarImage.transform.localRotation = Quaternion.identity;
-    }
-    */
+    
 
     /*public void startFlashJar()
     {

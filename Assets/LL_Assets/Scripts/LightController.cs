@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent (typeof (Light))]
+[DisallowMultipleComponent]
 public class LightController : MonoBehaviour {
 
     public GameObject audioManager;
@@ -11,56 +13,50 @@ public class LightController : MonoBehaviour {
 
     public Color godRod1Color;
     public Color godRod2Color;
+    bool startGodRays = false;
 
     private Light lightOfMyLife;
 
-    [SerializeField]
-    private Color32 previousColorGodRod1 = Color.clear;
-    [SerializeField]
-    private Color32 currentColorGodRod1 = Color.white;
-    [SerializeField]
-    private Color32 previousColorGodRod2 = Color.clear;
-    [SerializeField]
-    private Color32 currentColorGodRod2 = Color.white;
+    [Header("Scene Lighting Variables")]
+    [SerializeField] Color nightLightColour;
+    [SerializeField] Color dayLightColour;
+    [Tooltip("Duration in seconds.")]
+    [SerializeField] float duration  =  20;
+    float lightLerpControl = 0;
 
-    [SerializeField]
-    private float lerpColorTimeGodRod1 = 0;
-    [SerializeField]
-    private float lerpColorTimeGodRod2 = 0;
-    [SerializeField]
-    private float lerpColorTimeGodRod1Duration = 10;
-    [SerializeField]
-    private float lerpColorTimeGodRod2Duration = 15;
+    [Header ("Night Sky Variables")]
+    [SerializeField] GameObject skyMaterial;
+    [SerializeField] Color nightSkyColor;
+    [SerializeField] Color daySkyColor;
 
-    [SerializeField]
-    private float intensity = 0;
-	[SerializeField]
-	private float maxIntensity = 0.15f;
-    [SerializeField]
-    private float clipLength = 0;
-    [SerializeField]
-    private float startTime = 0;
+    [Header("God Ray Variables")]
+    [SerializeField] private Color32 previousColorGodRod1 = Color.clear;
+    [SerializeField] private Color32 currentColorGodRod1 = Color.white;
+    [SerializeField] private Color32 previousColorGodRod2 = Color.clear;
+    [SerializeField] private Color32 currentColorGodRod2 = Color.white;
 
-    [SerializeField]
-    private float lerpPositionRandomNumber1 = 60;
-    [SerializeField]
-    private float lerpPositionRandomNumber2 = 60;
+    [SerializeField] private float lerpColorTimeGodRod1 = 0;
+    [SerializeField] private float lerpColorTimeGodRod2 = 0;
+    [SerializeField] private float lerpColorTimeGodRod1Duration = 10;
+    [SerializeField] private float lerpColorTimeGodRod2Duration = 15;
 
-    [SerializeField]
-    private byte godRodLimit = 150;
+    [SerializeField] private float intensity = 0;
+	[SerializeField] private float maxIntensity = 0.15f;
+    [SerializeField] private float clipLength = 0;
+    [SerializeField] private float startTime = 0;
 
-    [SerializeField]
-    private bool setAlready1 = false;
-    [SerializeField]
-    private bool setAlready2 = false;
-    [SerializeField]
-    private bool startGame = false;
+    [SerializeField] private float lerpPositionRandomNumber1 = 60;
+    [SerializeField] private float lerpPositionRandomNumber2 = 60;
 
-    [SerializeField]
-    private Bounds b;
+    [SerializeField] private byte godRodLimit = 150;
 
-    [SerializeField]
-    private bool endSong = false;
+    [SerializeField] private bool setAlready1 = false;
+    [SerializeField] private bool setAlready2 = false;
+    [SerializeField] private bool startGame = false;
+
+    [SerializeField] private Bounds b;
+
+    [SerializeField] private bool endSong = false;
 
     // Use this for initialization
     void Start () {
@@ -85,28 +81,32 @@ public class LightController : MonoBehaviour {
 
         if (startGame)
         {
-            if (intensity < 0.99f)
+            lightOfMyLife.color = Color.Lerp(nightLightColour, dayLightColour, lightLerpControl);
+            skyMaterial.GetComponent<MeshRenderer>().material.color = Color.Lerp(nightSkyColor, daySkyColor, lightLerpControl);
+            if (lightLerpControl < 1)
             {
-                startTime = audioManager.GetComponent<AudioSource>().time;
-
-                intensity = startTime / clipLength;
-
-                lightOfMyLife.intensity = intensity;
+                lightLerpControl += Time.deltaTime / duration;
+                if (lightLerpControl > 0.6f && SceneManager.GetActiveScene().name != "Beach") {
+                    // Start God Rays
+                    startGodRays = true;
+                }
             }
-            else
-            {
+            else {
                 if (!endSong)
                 {
                     GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().FinishGame();
                     endSong = true;
                 }
-
             }
 
-            CheckGodRod(1);
-            CheckGodRod(2);
-            MoveGodRods();
-            RotateLight();
+            if (startGodRays) {
+                if (!godRod1.activeSelf) {
+                    godRod1.SetActive(true);
+                    godRod2.SetActive(true);
+                }
+                CheckGodRod(1);
+                CheckGodRod(2);
+            }
         }
     }
 

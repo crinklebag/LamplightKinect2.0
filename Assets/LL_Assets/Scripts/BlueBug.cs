@@ -21,12 +21,9 @@ public class BlueBug : MonoBehaviour {
 	private float angle;
 	private Quaternion rot;
 
-    [SerializeField]
-    GameObject glow;
-    [SerializeField]
-    GameObject sprite;
-    //[SerializeField]
-  // GameObject hitParticle;
+    [SerializeField] GameObject glow;
+    [SerializeField] GameObject sprite;
+    [SerializeField] GameObject hitParticle;
 
     [SerializeField] float speed = 1.25f;
     [SerializeField] float rotSpeed = 5.0f;
@@ -166,7 +163,7 @@ public class BlueBug : MonoBehaviour {
         glow.SetActive(false);
         sprite.SetActive(false);
 
-      //  GameObject BlueParticle = Instantiate(hitParticle) as GameObject;
-      //  BlueParticle.transform.position = this.transform.position;
+        GameObject BlueParticle = Instantiate(hitParticle) as GameObject;
+        BlueParticle.transform.position = this.transform.position;
     }
 }
