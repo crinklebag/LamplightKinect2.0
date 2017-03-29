@@ -33,6 +33,7 @@ public class KinectButton : MonoBehaviour {
 
     void Update()
     {
+		
         if (fade) {
            this.gameObject.GetComponent<Image>().color = Color.Lerp(this.gameObject.GetComponent<Image>().color, fadeToColor, Time.deltaTime);
            

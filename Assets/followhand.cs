@@ -12,6 +12,10 @@ public class followhand : BodySourceView {
 	private Kinect.Body[] bodies;
 
 	bool lostSkeleton = false;
+	bool play = false;
+	bool hasStarted = false;
+
+	[SerializeField] GameObject canvas;
 
 	[SerializeField]public float speed;
 	[SerializeField]public float distance;
@@ -42,6 +46,7 @@ public class followhand : BodySourceView {
 	void Start () {
 		bodyManager = BodySourceManager.GetComponent<BodySourceManager> ();
         checkScene();
+
 	}
 
 	// Update is called once per frame
@@ -58,7 +63,7 @@ public class followhand : BodySourceView {
             // NOTIFY PLAYER SKELETON IS BEING BUILT
             Debug.Log("bodies null");
             lostSkeleton = true;
-            //StartCoroutine(BuildSkeleton());
+			StartCoroutine(BuildSkeleton());
             return;
         }
 
@@ -73,7 +78,17 @@ public class followhand : BodySourceView {
 
 			if (body.IsTracked) {
 				
-				//panel.SetActive (false);
+				if (!hasStarted) {
+					hasStarted = true;
+					canvas.GetComponent<UI>().StartGame();
+					panel.SetActive (false);
+
+				}
+
+			
+
+				//StopCoroutine (BuildSkeleton ());
+				//canvas.GetComponent<UI>().StartGame();
 				//lostSkeleton = false;
 				// Debug.Log ("Tracked Joint z Pos: " + body.Joints[TrackedJoint].Position.Z);
 				if (body.Joints [TrackedJoint].Position.Z < distance) {
@@ -91,13 +106,12 @@ public class followhand : BodySourceView {
 
                     if ((int)body.TrackingId == ID) {
 						SmoothMove ();
-						lostSkeleton = false;
+						//lostSkeleton = false;
 					}
 				}
 
 			} else {
-				//lostSkeleton = true;
-				//StartCoroutine (BuildSkeleton ());
+				
 				bodies = null;
 			}
 		}
@@ -128,11 +142,23 @@ public class followhand : BodySourceView {
 			Debug.Log ("no skeleton , buildin it");
 
 			panel.SetActive (true);
-		} else 
+		}
+		if(play == true)
 		{
 			panel.SetActive (false);
-			StopCoroutine (BuildSkeleton ());
-		}		
+			lostSkeleton = false;
+			Debug.Log("here");
+			canvas.GetComponent<UI>().StartGame();
+			//StopCoroutine (BuildSkeleton ());
+
+		}
+
+	}
+
+	void Play(){
+		if (lostSkeleton== false) {
+			canvas.GetComponent<UI>().StartGame();
+		}
 	}
 
     public IEnumerator FlashJar()

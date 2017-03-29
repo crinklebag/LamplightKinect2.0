@@ -61,11 +61,14 @@ public class UI : MonoBehaviour
 
         theState = IngameMenuStates.PLAY;
     }
+	void Start(){
+		gc = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+	}
 
     // Use this for initialization
-    void Start()
+    public void StartGame()
     {
-        gc = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+       //gc = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 
         StartCoroutine("Countdown");
     }
