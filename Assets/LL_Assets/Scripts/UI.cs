@@ -27,7 +27,21 @@ public class UI : MonoBehaviour
 
     public Image FGOverlay;
     public Image progressBar;
-    
+
+    [SerializeField]
+    private GameObject WavePanel;
+    [SerializeField]
+    private GameObject WaveText;
+    [SerializeField]
+    private float desiredPanelHeight = -500.0f;
+    [SerializeField]
+    private float wavePanelMoveSpeed = 10.0f;
+    [SerializeField]
+    private float panelUpTime = 1.0f;
+    private bool isMovingWave = false;
+    private int WavePanelMoveCount = 0;
+    private int WaveCount = 0;
+
     public GameObject am;
     public GameObject exitButtonFG;
 
@@ -52,6 +66,9 @@ public class UI : MonoBehaviour
     [SerializeField] bool winGame = false;
     bool calledCountUpCoroutine = false;
     bool startedGame = false;
+
+    private float timeRemaining = 0.0f;
+    private bool startedProgressBarFlash = false;
 
     void Awake()
     {
@@ -82,8 +99,11 @@ public class UI : MonoBehaviour
             FinishGame(gc.GetFilledJars());
         }
 
-        if (startedGame) {
-            progressBar.fillAmount = am.GetComponent<AudioSource>().time / am.GetComponent<AudioSource>().clip.length;
+        if (startedGame)
+        {
+            timeRemaining = am.GetComponent<AudioSource>().clip.length - am.GetComponent<AudioSource>().time;
+
+            progressBarUpdate();
         }
 
         if (Input.GetKeyDown(KeyCode.L)) {
@@ -95,6 +115,7 @@ public class UI : MonoBehaviour
         }
 
         scoreText.text = gc.GetBugCount().ToString();
+        wavePanelUpdate();
     }
 
     IEnumerator Countdown()
@@ -200,5 +221,64 @@ public class UI : MonoBehaviour
     public void showFGOverlay()
     {
         FGOverlay.gameObject.SetActive(true);
+    }
+
+    public void wavePanelUpdate()
+    {
+        WaveText.GetComponent<Text>().text = "WAVE " + WaveCount.ToString();
+
+        if (WavePanelMoveCount > 0 && !isMovingWave)
+        {
+            WavePanelMoveCount--;
+            isMovingWave = true;
+            StartCoroutine(moveWavePanel());
+        }
+    }
+
+    IEnumerator moveWavePanel()
+    {
+        float tempY = WavePanel.transform.localPosition.y;
+
+        while (tempY < (desiredPanelHeight - 0.01f))
+        {
+            tempY = Mathf.MoveTowards(tempY, desiredPanelHeight, Time.deltaTime * wavePanelMoveSpeed);
+            WavePanel.transform.localPosition = new Vector3(WavePanel.transform.localPosition.x, tempY, WavePanel.transform.localPosition.z);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(panelUpTime);
+
+        while (tempY > -749.99f)
+        {
+            tempY = Mathf.MoveTowards(tempY, -750.0f, Time.deltaTime * wavePanelMoveSpeed);
+            WavePanel.transform.localPosition = new Vector3(WavePanel.transform.localPosition.x, tempY, WavePanel.transform.localPosition.z);
+            yield return null;
+        }
+
+        isMovingWave = false;
+        yield return null;
+    }
+
+    public void incWaveCount()
+    {
+        WaveCount++;
+        WavePanelMoveCount++;
+    }
+
+    void progressBarUpdate()
+    {
+        progressBar.fillAmount = am.GetComponent<AudioSource>().time / am.GetComponent<AudioSource>().clip.length;
+
+        if (timeRemaining <= 10.0f && !startedProgressBarFlash)
+        {
+            startedProgressBarFlash = true;
+            //StartCoroutine(flashdashit)
+        }
+
+        if (progressBar.fillAmount >= 0.999f)
+        {
+            winGame = true;
+            gc.FinishGame();
+        }
     }
 }

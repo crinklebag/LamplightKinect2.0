@@ -91,13 +91,6 @@ public class LightController : MonoBehaviour {
                     startGodRays = true;
                 }
             }
-            else {
-                if (!endSong)
-                {
-                    GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().FinishGame();
-                    endSong = true;
-                }
-            }
 
             if (startGodRays) {
                 if (!godRod1.activeSelf) {

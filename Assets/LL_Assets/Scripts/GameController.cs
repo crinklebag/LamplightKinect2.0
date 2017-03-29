@@ -229,6 +229,8 @@ public class GameController : MonoBehaviour
 
     public void makeLotsOfBugs()
     {
+        uiController.incWaveCount();
+
         for (int j = 0; j < 10; j++)
         {
             spawnIndex = Random.Range(0, spawnPoints.Length);
@@ -238,8 +240,10 @@ public class GameController : MonoBehaviour
             newBug.GetComponentInChildren<Flicker>()._band = bandFrequencies[j];
             activeBugs++;
         }
+
     }
 
+   
     //Call on exit button press
     //fade audio back out, change to fun facts loading scene
     public void ReturnToMenu()

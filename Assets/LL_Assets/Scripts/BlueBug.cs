@@ -1,8 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class BlueBug : MonoBehaviour {
+
+  
 
 	private GameController gameController;
 
@@ -145,15 +149,20 @@ public class BlueBug : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.gameObject.CompareTag("JarTop"))
-		{
-			aSFX.playDodo();
-            endLyfe();
-			//TODO: Disable Collider? or end lyfe cycle?
+        if(!beenHit)
+        {
+            beenHit = true;
 
-			gameController.makeLotsOfBugs();
-			//gameController.GetComponent<VibrationController>().Vibrate(); ?????
-		}
+            if (other.gameObject.CompareTag("JarTop"))
+            {
+                aSFX.playDodo();
+                endLyfe();
+                //TODO: Disable Collider? or end lyfe cycle?
+
+                gameController.makeLotsOfBugs();
+                //gameController.GetComponent<VibrationController>().Vibrate(); ?????
+            }
+        }
 	}
 
 
