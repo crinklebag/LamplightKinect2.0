@@ -119,7 +119,7 @@ public class MainMenuController : MonoBehaviour {
                 newPos = new Vector3(0, 0, 0);
                 break;
             case MenuState.SongSelect:
-                Debug.Log("Move Menu");
+                // Debug.Log("Move Menu");
                 newPos = new Vector3(-3840, 0, 0);
                 break;
             case MenuState.BGSelect:
@@ -167,10 +167,10 @@ public class MainMenuController : MonoBehaviour {
                         bgToSave = 2;
                         break;
                     case "Waterfall":
-                        bgToSave = 2;
+                        bgToSave = 3;
                         break;
                     case "Beach":
-                        bgToSave = 2;
+                        bgToSave = 4;
                         break;
                     default:
                         break;

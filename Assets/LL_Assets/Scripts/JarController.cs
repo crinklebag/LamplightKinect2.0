@@ -9,10 +9,13 @@ public class JarController : MonoBehaviour {
     [SerializeField] Sprite[] jarCracks;
     [SerializeField] SpriteRenderer jarImage;
     [SerializeField] GameObject bugGlow;
-    [SerializeField] Light jarHalo;
+    [SerializeField] GameObject jarHalo;
 
     int damage = 0;
     int maxDamage = 3;
+
+    float alphaIncreaseValue = 0;
+    float currentAlpha = 0;
 
     int maxBugs = 20;
     int bugCount = 0;
@@ -22,6 +25,8 @@ public class JarController : MonoBehaviour {
     // Use this for initialization
     void Start() {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+        alphaIncreaseValue = (30 / 20) * 0.01f;
+        StartCoroutine(FlickerLight());
     }
 
     // Update is called once per frame
@@ -32,7 +37,10 @@ public class JarController : MonoBehaviour {
     public void AddBug() {
         bugCount++;
         bugGlow.SetActive(true);
-        jarHalo.intensity = bugCount * 0.05f;
+        currentAlpha = currentAlpha + alphaIncreaseValue;
+        Color newColor = new Color(jarHalo.GetComponent<SpriteRenderer>().color.r, jarHalo.GetComponent<SpriteRenderer>().color.g, jarHalo.GetComponent<SpriteRenderer>().color.b, currentAlpha);
+        jarHalo.GetComponent<SpriteRenderer>().color = newColor;
+            // jarHalo.intensity = bugCount * 0.05f;
 
         if (bugCount == maxBugs) {
             isFull = true;
@@ -44,17 +52,22 @@ public class JarController : MonoBehaviour {
 
     public void RemoveBug() {
         bugCount--;
-        jarHalo.intensity = bugCount * 0.5f;
+        currentAlpha = currentAlpha - alphaIncreaseValue;
+        Color newColor = new Color(jarHalo.GetComponent<SpriteRenderer>().color.r, jarHalo.GetComponent<SpriteRenderer>().color.g, jarHalo.GetComponent<SpriteRenderer>().color.b, currentAlpha);
+        jarHalo.GetComponent<SpriteRenderer>().color = newColor;
+        // jarHalo.intensity = bugCount * 0.1f;
 
         if (bugCount == 0) {
             bugGlow.SetActive(false);
-            jarHalo.intensity = 0;
+            jarHalo.GetComponent<SpriteRenderer>().color = Color.clear;
+            currentAlpha = 0;
         }
     }
 
     public void ResetJar() {
         jarImage.sprite = jarCracks[0];
-        jarHalo.intensity = 0;
+        jarHalo.GetComponent<SpriteRenderer>().color = Color.clear;
+        currentAlpha = 0;
         bugGlow.SetActive(false);
         bugCount = 0;
     }
@@ -65,5 +78,31 @@ public class JarController : MonoBehaviour {
 
     public bool IsFull() {
         return isFull;
+    }
+
+    IEnumerator FlickerLight()
+    {
+
+        yield return new WaitForSeconds(0.1f);
+
+        int rand = Random.Range(0, 2);
+        float tempAlpha = 0;
+
+        if (currentAlpha > 0) {
+            switch (rand) {
+                case 0:
+                    tempAlpha = currentAlpha - 0.05f;
+                    break;
+                case 1:
+                    tempAlpha = currentAlpha;
+                    break;
+                case 2:
+                    tempAlpha = currentAlpha + 0.05f;
+                    break;
+            }
+        }
+
+        jarHalo.GetComponent<SpriteRenderer>().color = new Color(jarHalo.GetComponent<SpriteRenderer>().color.r, jarHalo.GetComponent<SpriteRenderer>().color.g, jarHalo.GetComponent<SpriteRenderer>().color.b, tempAlpha);
+        StartCoroutine(FlickerLight());
     }
 }

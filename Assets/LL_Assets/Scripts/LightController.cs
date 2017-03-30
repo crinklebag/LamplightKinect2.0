@@ -17,6 +17,8 @@ public class LightController : MonoBehaviour {
 
     private Light lightOfMyLife;
 
+    float lightMultiplier = 0.1f;
+
     [Header("Scene Lighting Variables")]
     [SerializeField] Color nightLightColour;
     [SerializeField] Color dayLightColour;
@@ -25,7 +27,7 @@ public class LightController : MonoBehaviour {
     float lightLerpControl = 0;
 
     [Header ("Night Sky Variables")]
-    [SerializeField] GameObject skyMaterial;
+    [SerializeField] GameObject[] bgMaterials;
     [SerializeField] Color nightSkyColor;
     [SerializeField] Color daySkyColor;
 
@@ -82,13 +84,18 @@ public class LightController : MonoBehaviour {
         if (startGame)
         {
             lightOfMyLife.color = Color.Lerp(nightLightColour, dayLightColour, lightLerpControl);
-            skyMaterial.GetComponent<MeshRenderer>().material.color = Color.Lerp(nightSkyColor, daySkyColor, lightLerpControl);
+
+            for (int i = 0; i < bgMaterials.Length; i++) {
+                bgMaterials[i].GetComponent<MeshRenderer>().material.color = Color.Lerp(nightSkyColor, daySkyColor, lightLerpControl * lightMultiplier);
+            }
+
             if (lightLerpControl < 1)
             {
                 lightLerpControl += Time.deltaTime / duration;
-                if (lightLerpControl > 0.6f && SceneManager.GetActiveScene().name != "Beach") {
+                if (lightLerpControl > 0.5f && SceneManager.GetActiveScene().name != "Beach") {
                     // Start God Rays
                     startGodRays = true;
+                    lightMultiplier = 0.8f;
                 }
             }
 

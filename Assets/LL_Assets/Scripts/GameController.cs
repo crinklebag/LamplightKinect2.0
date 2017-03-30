@@ -40,6 +40,8 @@ public class GameController : MonoBehaviour
     int activeBugs = 0;
     int filledJars = 0;
 
+    public bool allowSpawn = false;
+
     // Use this for initialization
     void Start() {
         Initialize();
@@ -81,7 +83,9 @@ public class GameController : MonoBehaviour
 
         InitializeBugs();
 
-        evilBugController.startSpawn = true;
+        allowSpawn = true;
+
+        // evilBugController.startSpawn = true;
     }
 
     void InstantiateBug()

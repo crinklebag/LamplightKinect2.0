@@ -39,7 +39,7 @@ public class KinectButton : MonoBehaviour {
            
 
           buttonText.text = buttontext;
-          Debug.Log("Reset name to: " + buttontext);
+          // Debug.Log("Reset name to: " + buttontext);
         }
     }
     

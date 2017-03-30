@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EvilBugController : MonoBehaviour {
 
+    GameController gc;
+
 	private List<GameObject> bugPool;//object pool
 	[SerializeField] int evilBugCount = 8;//pool size
 	[SerializeField] GameObject bug;//evil bugs
@@ -63,9 +65,17 @@ public class EvilBugController : MonoBehaviour {
         instantiateTime = instMaxTime;
     }
 
+    void Start() {
+        gc = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+    }
+
     void Update ()
 	{
 		counter ();
+
+        if (gc.allowSpawn) {
+            startSpawn = true;
+        }
 
 		if (countTime >= instantiateTime && startSpawn)
 		{
