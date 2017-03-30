@@ -21,7 +21,7 @@ public class IntroAnimController : MonoBehaviour {
 
 	IEnumerator StopAnim()
 	{
-		yield return new WaitForSecondsRealtime(2.5f);
+		yield return new WaitForSecondsRealtime(3);
 		introAnim.SetActive (false);
 		menuFly.SetActive (true);
 		canvas.SetActive (true);
