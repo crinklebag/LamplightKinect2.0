@@ -33,6 +33,8 @@ public class EvilBugController : MonoBehaviour {
     [SerializeField]
     private bool pointyBoy = false;
 
+    public bool startSpawn = false;
+
 
 
     //Create pool of evil bugs, instantiate, add to pool, give them a name, disable them
@@ -65,7 +67,7 @@ public class EvilBugController : MonoBehaviour {
 	{
 		counter ();
 
-		if (countTime >= instantiateTime)
+		if (countTime >= instantiateTime && startSpawn)
 		{
 			reset();
 

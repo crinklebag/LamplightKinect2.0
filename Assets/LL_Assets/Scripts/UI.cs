@@ -67,8 +67,15 @@ public class UI : MonoBehaviour
     bool calledCountUpCoroutine = false;
     bool startedGame = false;
 
-    private float timeRemaining = 0.0f;
+    private float timeRemaining;
     private bool startedProgressBarFlash = false;
+    private bool startedFinalCountdown = false;
+
+    [SerializeField]
+    private float FinalScoreFinishWait = 5.0f;
+
+    [SerializeField]
+    private float progressFlashSpeed = 5.0f;
 
     void Awake()
     {
@@ -78,7 +85,8 @@ public class UI : MonoBehaviour
 
         theState = IngameMenuStates.PLAY;
     }
-	void Start(){
+	void Start()
+    {
 		gc = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 	}
 
@@ -88,6 +96,7 @@ public class UI : MonoBehaviour
        //gc = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 
         StartCoroutine("Countdown");
+
     }
 
     // Update is called once per frame
@@ -104,6 +113,7 @@ public class UI : MonoBehaviour
             timeRemaining = am.GetComponent<AudioSource>().clip.length - am.GetComponent<AudioSource>().time;
 
             progressBarUpdate();
+            endGameUpdate();
         }
 
         if (Input.GetKeyDown(KeyCode.L)) {
@@ -269,10 +279,12 @@ public class UI : MonoBehaviour
     {
         progressBar.fillAmount = am.GetComponent<AudioSource>().time / am.GetComponent<AudioSource>().clip.length;
 
+        //Debug.Log("t: " + timeRemaining);
+
         if (timeRemaining <= 10.0f && !startedProgressBarFlash)
         {
             startedProgressBarFlash = true;
-            //StartCoroutine(flashdashit)
+            StartCoroutine(flashProgressBar());
         }
 
         if (progressBar.fillAmount >= 0.999f)
@@ -280,5 +292,56 @@ public class UI : MonoBehaviour
             winGame = true;
             gc.FinishGame();
         }
+    }
+
+    void endGameUpdate()
+    {
+        if (timeRemaining <= 5.0f && !startedFinalCountdown)
+        {
+            startedFinalCountdown = true;
+            StartCoroutine(FinishGameCountdown());
+        }
+    }
+
+    IEnumerator flashProgressBar()
+    {
+        float temp = progressBar.color.b;
+
+        while (temp > 0.0f)
+        {
+            temp = Mathf.MoveTowards(temp, 0.0f, Time.deltaTime * progressFlashSpeed);
+            progressBar.color = new Color(progressBar.color.r, temp, temp);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.1f);
+
+        while (temp < 1.0f)
+        {
+            temp = Mathf.MoveTowards(temp, 1.0f, Time.deltaTime * progressFlashSpeed);
+            progressBar.color = new Color(progressBar.color.r, temp, temp);
+            yield return null;
+        }
+
+        startedProgressBarFlash = false;
+        yield return null;
+    }
+
+    IEnumerator FinishGameCountdown()
+    {
+        countdown.gameObject.SetActive(true);
+        float intervalTime = timeRemaining / 3.0f;
+
+        for (int i = 3; i > 0; i--)
+        {
+            countdown.text = i.ToString();
+
+            countdown.gameObject.GetComponent<Animator>().Play("CountdownFade", -1, 0.0f);
+
+            yield return new WaitForSeconds(intervalTime);
+        }
+
+        countdown.gameObject.SetActive(false);
+        yield return null;
     }
 }

@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
     UI uiController;
     AudioManager audioManager;
     LightController lightController;
+    EvilBugController evilBugController;
 
     private AudioSFX aSFX;
 
@@ -54,6 +55,8 @@ public class GameController : MonoBehaviour
         JarTopCollider = GameObject.FindGameObjectWithTag("JarTop");
         audioManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
         lightController = GameObject.FindGameObjectWithTag("LightManager").GetComponent<LightController>();
+        evilBugController = GameObject.FindGameObjectWithTag("EvilBugController").GetComponent<EvilBugController>();
+
         
         // Disable the player script
         player.GetComponent<Net>().enabled = false;
@@ -77,6 +80,8 @@ public class GameController : MonoBehaviour
         lightController.SetGame();
 
         InitializeBugs();
+
+        evilBugController.startSpawn = true;
     }
 
     void InstantiateBug()
