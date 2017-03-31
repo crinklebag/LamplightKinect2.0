@@ -34,7 +34,7 @@ public class MenuFly : MonoBehaviour
     [SerializeField] GameObject watrefallLayerMask;
     [SerializeField] GameObject beachLayerMask;
 
-
+	[SerializeField] Text text;
     void OnTriggerStay2D(Collider2D col)
     {
         if (col.gameObject.CompareTag("Button"))
@@ -51,6 +51,10 @@ public class MenuFly : MonoBehaviour
         if (col.gameObject.CompareTag("Button"))
         {
             col.gameObject.GetComponent<KinectButton>().setFade(false);
+			if (col.gameObject.name == "Start Game") {
+				col.gameObject.GetComponent<StartButtonScalar> ().speed = 0.0f;
+				text.gameObject.transform.localScale = new Vector3 (1.5f, 1.5f, 0.0f);
+			}
         }
     }
 
@@ -63,6 +67,10 @@ public class MenuFly : MonoBehaviour
             // glowlevel = Mathf.Lerp(glowlevel, 0.0f, Time.deltaTime);
             glowing = false;
             col.gameObject.GetComponent<KinectButton>().setFade(true);
+			if (col.gameObject.name == "Start Game") {
+				col.gameObject.GetComponent<StartButtonScalar> ().speed = 1.0f;
+				text.gameObject.transform.localScale = new Vector3 (1.5f, 1.5f, 0.0f);
+			}
         }
     }
     // Update is called once per frame

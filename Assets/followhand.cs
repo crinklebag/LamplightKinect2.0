@@ -41,6 +41,7 @@ public class followhand : BodySourceView {
     [SerializeField] GameObject netSprites;
 
     int counter = 0;
+	[SerializeField] float zpos = 1;
 
 	// Use this for initialization
 	void Start () {
@@ -63,7 +64,10 @@ public class followhand : BodySourceView {
             // NOTIFY PLAYER SKELETON IS BEING BUILT
             Debug.Log("bodies null");
             lostSkeleton = true;
-			StartCoroutine(BuildSkeleton());
+
+			if (SceneManager.GetActiveScene().buildIndex != 2) {
+				StartCoroutine (BuildSkeleton ());
+			}
             return;
         }
 
@@ -77,13 +81,20 @@ public class followhand : BodySourceView {
 			}
 
 			if (body.IsTracked) {
-				
-				if (!hasStarted) {
-					hasStarted = true;
-					canvas.GetComponent<UI>().StartGame();
-					panel.SetActive (false);
 
+				if (SceneManager.GetActiveScene ().buildIndex != 2) {
+					
+				
+					if (!hasStarted) {
+						hasStarted = true;
+						canvas.GetComponent<UI> ().StartGame ();
+						panel.SetActive (false);
+						zpos = -5.0f;
+
+					}
 				}
+
+
 
 			
 
@@ -130,7 +141,7 @@ public class followhand : BodySourceView {
         // this.transform.LookAt(temp);
         // Debug.Log ("Moving");
         
-        Vector3 targetPos = new Vector3(Mathf.Clamp(temp.x * speed, -8.50F, 8.50F), Mathf.Clamp(temp.y * speed, -4.50F,4.5F), 1);
+        Vector3 targetPos = new Vector3(Mathf.Clamp(temp.x * speed, -8.50F, 8.50F), Mathf.Clamp(temp.y * speed, -4.50F,4.5F), zpos);
        
         this.transform.position = Vector3.Lerp(this.transform.position, targetPos, Time.smoothDeltaTime);
     }
