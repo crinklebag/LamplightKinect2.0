@@ -86,16 +86,18 @@ public class LightController : MonoBehaviour {
             lightOfMyLife.color = Color.Lerp(nightLightColour, dayLightColour, lightLerpControl);
 
             for (int i = 0; i < bgMaterials.Length; i++) {
-                bgMaterials[i].GetComponent<MeshRenderer>().material.color = Color.Lerp(nightSkyColor, daySkyColor, lightLerpControl * lightMultiplier);
+                // Debug.Log("Changing Material Colour");
+                bgMaterials[i].GetComponent<MeshRenderer>().material.color = Color.Lerp(nightSkyColor, daySkyColor, lightLerpControl);
             }
-
+            
             if (lightLerpControl < 1)
             {
                 lightLerpControl += Time.deltaTime / duration;
                 if (lightLerpControl > 0.5f && SceneManager.GetActiveScene().name != "Beach") {
                     // Start God Rays
                     startGodRays = true;
-                    lightMultiplier = 0.8f;
+                    // lightMultiplier = 0.8f;
+                    lightMultiplier += Time.deltaTime;
                 }
             }
 
