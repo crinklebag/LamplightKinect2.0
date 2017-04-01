@@ -53,7 +53,7 @@ public class MenuFly : MonoBehaviour
             col.gameObject.GetComponent<KinectButton>().setFade(false);
 			if (col.gameObject.name == "Start Game") {
 				col.gameObject.GetComponent<StartButtonScalar> ().speed = 0.0f;
-				text.gameObject.transform.localScale = new Vector3 (1.5f, 1.5f, 0.0f);
+				//text.gameObject.transform.localScale = new Vector3 (1.0f, 1.0f, 0.0f);
 			}
         }
     }
@@ -68,8 +68,8 @@ public class MenuFly : MonoBehaviour
             glowing = false;
             col.gameObject.GetComponent<KinectButton>().setFade(true);
 			if (col.gameObject.name == "Start Game") {
-				col.gameObject.GetComponent<StartButtonScalar> ().speed = 1.0f;
-				text.gameObject.transform.localScale = new Vector3 (1.5f, 1.5f, 0.0f);
+			col.gameObject.GetComponent<StartButtonScalar> ().speed = 0.5f;
+				//text.gameObject.transform.localScale = new Vector3 (1.0f, 1.0f, 0.0f);
 			}
         }
     }
