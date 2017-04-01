@@ -58,7 +58,7 @@ public class UI : MonoBehaviour
 
     int maxFireflies = 20;
     int score = 0;
-    int totalScore = 0;
+    public int totalScore = 0;
     int tempScoreCounter = 0;
     [SerializeField] int[] timesFireflyWentHere;
 
@@ -192,6 +192,7 @@ public class UI : MonoBehaviour
             StartCoroutine("CountUpScore");
             calledCountUpCoroutine = true;
         }
+		PlayerPrefs.SetInt ("Player Score", totalScore);
     }
 
     public void SetHasTouchedAtEnd(bool val)

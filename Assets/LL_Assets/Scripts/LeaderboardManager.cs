@@ -9,295 +9,175 @@ using System.Text;
 //TODO
 //Need Gameobject with script that stores songs played and scores for those songs; access existing scripts?
 //Build path test
-//Two files required for testing purposes.  Should be one for the final version?
 //File access for different platforms
-//Player enters name for each song.  Button that says save name for all?
 //Preprocessor directives for platform specific code?
-//UpdateScores overload for all?
-//Fix/rework updating scores
-//Sort all leaderboards
-//Change to work with one save file
+//Add a bool to playerInfo that was added called Updated to make use of showing recent addition?
 //Do scores with duplicate names matter?
-//Redo remove blank lines
+//Code clean up
+//Leaderboard offset variable?
 
 public class LeaderboardManager : MonoBehaviour 
 {
-	public string filepath;
-	public string filepath2;
+    [SerializeField]
+    private string filepath;
+
+    [SerializeField]
     private string projectName;
-	string filename;
-	string filename2;
-	public Text testText;
-	public int numTopScores = 10;
+
+    string filename;
+    //public Text testText; //use for testing file paths
+    private int numTopScores = 5;
+    private int numMaxScores = 100;
     //public string[] delimiters = { @":" };
     char[] charSeparators = new char[] {':'};
-	StreamReader infile;
+    StreamReader infile;
+
+    [SerializeField] private Transform startPoint = null;
+    public Vector2 leaderboardSize = Vector2.zero;
+    public GameObject leaderboardPrefab = null;
+    public Bounds leaderboardPrefabBounds;
+    private int numLeaderboards = 0;
+    public Canvas canvas = null;
+
+    public GameObject[] leaderboards = null;
 
     public class PlayerInfo
     {
         public string playerName = "??";
         public int playerScore = 0;
+        public bool wasAdded = false;
+        public int rank = 0;
     }
 
     public class LeaderboardInfo
     {
-        public string songName = "";
+        //public string songName = "";
         public PlayerInfo[] playersInfo;   
     }
 
-    public LeaderboardInfo[] leaderboardArray;
+    private LeaderboardInfo total = new LeaderboardInfo();
+    private LeaderboardInfo topFive = new LeaderboardInfo();
+    private LeaderboardInfo playerRanking = new LeaderboardInfo();
+    public List<LeaderboardInfo> leaderboardList = new List<LeaderboardInfo>();
 
-    public PlayerInfo tempInfo = new PlayerInfo();
+    //private Player.SessionInfo info = new Player.SessionInfo();
+    private PlayerInfo info = new PlayerInfo();
     
-	// Use this for initialization
-	void Start () 
-	{
-        projectName = "LeaderboardTester2";
-		filename = "test1"; //read
-		filename2 = "test2"; //write
-		if (Application.platform == RuntimePlatform.WindowsEditor)
-		{
-            filepath = "../" + projectName + "/Assets/" + filename + ".txt";
-            filepath2 = "../" + projectName + "/Assets/" + filename2 + ".txt";
-		}
+    // Use this for initialization
+    void Start () 
+    {
+        projectName = "LamplightKinect2.0";
+        filename = "test1";
 
-		else if(Application.platform == RuntimePlatform.Android)
-		{
-			filepath = Application.persistentDataPath + "/" + filename;
-            filepath2 = Application.persistentDataPath + "/" + filename2;
-		}
-
-		//infile = new StreamReader (filepath);
-
-        string tempSong = "song4";
-        tempInfo.playerName = "temp";
-        tempInfo.playerScore = 305;	
-        LoadScores();
-
-        if(CheckIfExists("song4") == false)
+        if (Application.platform == RuntimePlatform.WindowsEditor)
         {
-            WriteNewEntry("song4");
+            filepath = "../" + projectName + "/Assets/" + filename + ".txt";
         }
 
-        //UpdateScores(tempSong, tempInfo, ref leaderboardArray);
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-		
-	}
+        else if(Application.platform == RuntimePlatform.Android ||
+                Application.platform == RuntimePlatform.WindowsPlayer)
+        {
+            filepath = Application.persistentDataPath + "/" + filename;
+        }
 
-	public void LoadScores()
-	{
+        info.playerName = Player.instance.info.playerName;
+        info.playerScore = Player.instance.info.playerScore;
+        info.wasAdded = true;  
+
+        LoadScores();
+        GetLeaderboards();
+        //PrintLeaderboardContents(ref total);    
+        DisplayLeaderboards();
+    }
+    
+    // Update is called once per frame
+    void Update () 
+    {
+
+    }
+
+    private void LoadScores()
+    {
         infile = new StreamReader (filepath);
         string[] fileInfo = File.ReadAllLines(filepath);
-        //print(fileInfo.Length);
         List<string> tempList;
 
         tempList = fileInfo.ToList();
-        print(fileInfo.Length);
+        print("t:" + tempList.Count);
         if(tempList.Count > 0)
         {
-            leaderboardArray = new LeaderboardInfo[(fileInfo.Length / (numTopScores + 1))];
-            //Debug.Log("Length" + leaderboardArray.Length);
-
             RemoveBlankLines(ref tempList);
 
-            /*if(tempList.Count % (numTopScores + 1) == 0)
+            fileInfo = tempList.ToArray();
+
+            total.playersInfo = new PlayerInfo[fileInfo.Length];
+
+            print(total.playersInfo.Length);
+
+            for (int i = 0; i < fileInfo.Length; i++)
             {
-                tempList.RemoveRange(((numTopScores + 1) * leaderboardArray.Length), 
-                                    (tempList.Count -((numTopScores + 1) * leaderboardArray.Length) ));
-            }*/
+                total.playersInfo[i] = new PlayerInfo(); 
+                 //string[] s = x[i].Split(delimiters, System.StringSplitOptions.None); use for splitting by string(s)
+                string[] tempStringArray = fileInfo[i].Split(charSeparators, System.StringSplitOptions.None); //splitting by char(s)
 
-            fileInfo = tempList.ToArray();                       
-            print(fileInfo.Length);
-                                    
-            for (int i = 0; i < leaderboardArray.Length; i++)
-            {
-                leaderboardArray[i] = new LeaderboardInfo();
-                leaderboardArray[i].playersInfo = new PlayerInfo[numTopScores];
+                total.playersInfo[i].playerName = tempStringArray[0];
+                total.playersInfo[i].playerScore = int.Parse (tempStringArray[1]);
+                total.playersInfo[i].wasAdded = false;
+            } 
 
-                for (int j = 0; j < numTopScores; j++) 
-                {
-                    leaderboardArray[i].playersInfo[j] = new PlayerInfo();
-                }
-            }
+            infile.Close ();  
+            UpdateScores(info, ref total);
+            WriteScores(ref total);                    
 
-
-
-            for (int j = 0; j < leaderboardArray.Length; j++)
-            {
-
-                for (int i = 0; i < numTopScores + 1; i++)
-                {
-                    //print("i " + i);
-                    if(i == 0)
-                    {
-                        leaderboardArray[j].songName = fileInfo[(numTopScores + 1) * j];
-                        //print(leaderboardArray[j].songName);
-                    }
-
-                    else
-                    {
-                         //string[] s = x[i].Split(delimiters, System.StringSplitOptions.None); use for splitting by string(s)
-                        string[] tempStringArray = fileInfo[i + ((numTopScores + 1) * j)].Split(charSeparators, System.StringSplitOptions.None); //splitting by char(s)
-                        //Debug.Log(tempStringArray.Length);
-                        //Debug.Log("Split: " + tempStringArray[0] + " " + tempStringArray[1]);
-
-                        //print(i + ((numTopScores + 1) * j));
-
-                        leaderboardArray[j].playersInfo[i - 1].playerName = tempStringArray[0];
-                        leaderboardArray[j].playersInfo[i - 1].playerScore = int.Parse (tempStringArray[1]);
-                        //Debug.Log("PlayerName: " + leaderboardArray[j].playersInfo[i - 1].playerName);
-                        //Debug.Log("PlayerScore: " + leaderboardArray[j].playersInfo[i - 1].playerScore);
-                    }
-                }
-            }
-
-    		infile.Close ();
-            SortAllScores(ref leaderboardArray);
-            WriteScores(leaderboardArray);
         }
 
         else
         {
+            infile.Close();
             print("No data");
-            //If no data exists, a new entry should be created for each song
+            WriteToFile(info);
+            //Should this make a new file at a location?
         }
+    }
 
-        //Checking contents
-        /*for (int x = 0; x < leaderboardArray.Length; x++)
-        {
-            print(leaderboardArray[x].songName);
-            for (int y = 0; y < leaderboardArray[x].playersInfo.Length; y++)
-            {
-                print(leaderboardArray[x].playersInfo[y].playerName + " " + leaderboardArray[x].playersInfo[y].playerScore);
-            }
-        }*/
-	}
-
-	public void WriteScores(LeaderboardInfo[] list)
-	{
-		StreamWriter outfile = new StreamWriter (filepath);
+    private void WriteScores(ref LeaderboardInfo leaderboard)
+    {
+        StreamWriter outfile = new StreamWriter (filepath);
         //StreamWriter outfile = new StreamWriter (filepath2, true); // this is for appending
-		//outfile.Write(""); for erasing contents
+        //outfile.Write(""); for erasing contents
 
-		for (int i = 0; i < list.Length; i++) 
-		{
-		    outfile.WriteLine (list[i].songName);
-            for (int j = 0; j < list[i].playersInfo.Length; j++) 
-            {
-                //Debug.Log("PlayerName: " + list[i].playersInfo[j].playerName);
-                //Debug.Log("PlayerScore: " + list[i].playersInfo[j].playerScore);
-                outfile.WriteLine(list[i].playersInfo[j].playerName + charSeparators[0] + list[i].playersInfo[j].playerScore);
-            }
-		}
-
-		outfile.Close ();
-	}
-
-    public bool CheckIfExists(string songName)
-    {
-       bool exists = true;
-       for (int i = 0; i < leaderboardArray.Length; i++)
-       {
-          if(leaderboardArray[i].songName == songName)
-          {
-               exists = true;
-          }
-
-          else
-          {
-               exists = false;
-          }
-       }
-
-       return exists;
-    }
-
-    public void WriteNewEntry(string songName)
-    {     
-       StreamWriter outfile = new StreamWriter (filepath, true);
-
-       LeaderboardInfo temp = new LeaderboardInfo();
-       temp.playersInfo = new PlayerInfo[numTopScores];
-       temp.songName = songName;
-       outfile.WriteLine("\n");
-       outfile.WriteLine(temp.songName);
-
-       for (int j = 0; j < temp.playersInfo.Length; j++) 
-       {
-           temp.playersInfo[j] = new PlayerInfo();
-           outfile.WriteLine(temp.playersInfo[j].playerName + charSeparators[0] + temp.playersInfo[j].playerScore);
-       }
-
-       outfile.Close();
-    }
-
-    /*public void UpdateScores(PlayerInfo currentInfo, ref LeaderboardInfo current) //Update one
-    {
-       //Cast array to list, sort, cast back and then write to file
-
-       List<PlayerInfo> tempList;
-       tempList = current.playersInfo.ToList();
-
-       tempList.Add(currentInfo);
-       SortScores(tempList);
-       tempList.RemoveAt(tempList.Count - 1);
-
-       current.playersInfo = tempList.ToArray();
-       LoadScores();
-
-    }*/
-
-    /*public void UpdateScores(string[] songs, PlayerInfo[] currentInfo, LeaderboardInfo[] current) //Update all
-    {
-        
-    }*/
-
-    public void UpdateScores(string song, PlayerInfo currentInfo, ref LeaderboardInfo[] current)
-    {
-        List<PlayerInfo> tempList;
-        for (int i = 0; i < current.Length; i++)
+        for (int i = 0; i < leaderboard.playersInfo.Length; i++) 
         {
-            if(current[i].songName == song)
-            {
-                print("found");
-                tempList = current[i].playersInfo.ToList();
-                tempList.Add(currentInfo);
-                SortScores(tempList);
-                tempList.RemoveAt(tempList.Count - 1);
-
-                current[i].playersInfo = tempList.ToArray();
-
-                for (int j = 0; j < current[i].playersInfo.Length; j++)
-                {
-                    print(current[i].playersInfo[j].playerName);
-                }
-            }
-
-            else
-            {
-                print("not found");
-            }
+            outfile.WriteLine(leaderboard.playersInfo[i].playerName + charSeparators[0] + leaderboard.playersInfo[i].playerScore);
         }
 
-       WriteScores(current);
-       //LoadScores();
+        outfile.Close ();
     }
 
-    public void SortAllScores(ref LeaderboardInfo[] leaderboards)
+    private void WriteToFile(PlayerInfo info)
     {
-        foreach (LeaderboardInfo leaderboard in leaderboards)
-        {
-            List<PlayerInfo> temp = leaderboard.playersInfo.ToList();
-            SortScores(temp);
-            leaderboard.playersInfo = temp.ToArray();
-        }
+        StreamWriter outfile = new StreamWriter (filepath);
+        outfile.WriteLine(info.playerName + charSeparators[0] + info.playerScore);
+        outfile.Close();
     }
 
-    public void SortScores(List<PlayerInfo> current) //Custom list sort method
+    private void UpdateScores(PlayerInfo currentInfo, ref LeaderboardInfo leaderboard)
+    {
+        List<PlayerInfo> tempList = leaderboard.playersInfo.ToList();
+        tempList.Add(currentInfo);
+
+        SortScores(ref tempList);
+
+        if(tempList.Count > numMaxScores)
+        {
+            int range = tempList.Count - numMaxScores;
+            tempList.RemoveRange(numMaxScores, range);
+        }
+
+        leaderboard.playersInfo = tempList.ToArray();
+    }
+
+    private void SortScores(ref List<PlayerInfo> current) //Custom list sort method
     {
         current.Sort((PlayerInfo x, PlayerInfo y)=>
         {
@@ -318,31 +198,193 @@ public class LeaderboardManager : MonoBehaviour
         });
     }
 
-    public void RemoveBlankLines(ref List<string> list)
+    private void RemoveBlankLines(ref List<string> list)
     {
-        int num = 0;
-       /* for (int i = 0; i < list.Count; i++)
-        {
-            if(string.IsNullOrEmpty(list[i]))
-            {
-                //print("Null");
-                print("count " + list.Count);
-                num++;
-                list.RemoveAt(i);
-                print(list[i] + " " + num);
+        List<string> tempList = new List<string>();
 
+       for (int i = 0; i < list.Count; i++)
+       {
+          if(!string.IsNullOrEmpty(list[i]))
+          {
+              tempList.Add(list[i]);
+          }
+       }
+
+       list = tempList;
+
+    }
+
+    private void PrintLeaderboardContents(ref LeaderboardInfo leaderboard)
+    {
+        //Checking contents
+        for (int x = 0; x < leaderboard.playersInfo.Length; x++)
+        {
+            print(leaderboard.playersInfo[x].playerName + " " + leaderboard.playersInfo[x].playerScore);
+        }
+    }
+
+    private void EraseContents()
+    {
+        StreamWriter outfile = new StreamWriter (filepath);
+        outfile.Write("");
+        outfile.Close();
+    }
+
+    public void GetLeaderboards()
+    {
+        int lowerBound = 0;
+        int upperBound = 0;
+        int position = 0;
+        playerRanking.playersInfo = new PlayerInfo[numTopScores];
+        PlayerInfo tempInfo = new PlayerInfo();
+
+        print("Total " + total.playersInfo.Length);
+
+        for (int i = 0; i < numTopScores; i++)
+        {
+            playerRanking.playersInfo[i] = new PlayerInfo();
+        }
+
+        foreach (PlayerInfo temp in total.playersInfo)
+        {
+            if (temp.wasAdded)
+            {
+                tempInfo = temp;
             }
-        }*/
+        }
 
-        foreach(string line in list)
+        print(tempInfo.playerName + " " + tempInfo.playerScore);
+
+        for (int j = 0; j < total.playersInfo.Length; j++)
         {
-            if(string.IsNullOrEmpty(line))
+            if(total.playersInfo[j].wasAdded)
             {
-                print("Null");
-                //print("count " + list.Count);
-                list.Remove(line);
-                //print(list[i] + " " + num);
+                tempInfo = total.playersInfo[j];
+                position = j + 1;
+                break;
+            }
+        }
 
+        topFive.playersInfo = new PlayerInfo[numTopScores];
+
+        for (int i = 0; i < numTopScores; i++)
+        {
+            topFive.playersInfo[i] = new PlayerInfo();
+            topFive.playersInfo[i] = total.playersInfo[i];
+            topFive.playersInfo[i].rank = i + 1;
+        }
+
+        print("pos " + position);
+
+        if(position > numTopScores)
+        {
+            int lowerOffset = (position - 1) - numTopScores;
+            print("lOff: " + lowerOffset);
+            if(lowerOffset < 2)
+            {
+                lowerBound = numTopScores - 1;
+                upperBound = position + numTopScores - 1;
+            }
+
+            else
+            {
+                if(position == total.playersInfo.Length)
+                {
+                    upperBound = 0;
+                    lowerBound = position - numTopScores;
+                    print("Equal");
+                }
+
+                else if (position == (total.playersInfo.Length - 1))
+                {
+                    upperBound = position + 1 ;
+                    lowerBound = position - (numTopScores - 2);
+                }
+
+                else
+                {
+                    upperBound = position + 2;
+                    lowerBound = position - 2;
+                }
+            }
+
+            leaderboardList.Add(topFive);
+        }
+
+        else
+        {
+            leaderboardList.Add(topFive);
+            return;
+        }
+
+        print("lBound: " + lowerBound);
+        print("uBound: " + upperBound);
+
+        List<PlayerInfo> tempList = new List<PlayerInfo>();
+
+        for (int k = lowerBound; k <= upperBound; k++)
+        {
+            total.playersInfo[k - 1].rank = k;
+            tempList.Add(total.playersInfo[k - 1]);
+            //print(total.playersInfo[k - 1].playerName + " " + total.playersInfo[k - 1].playerScore);
+            print("K " + k);
+        }
+
+        PlayerInfo[] tempArray = tempList.ToArray();
+        print(tempArray.Length);
+
+        for (int q = 0; q < tempArray.Length; q++)
+        {
+           print(tempArray[q].rank + " " + tempArray[q].playerName + " " + tempArray[q].playerScore);
+        }
+
+        playerRanking.playersInfo = tempList.ToArray();
+        leaderboardList.Add(playerRanking);
+    }
+
+    private void DisplayLeaderboards()
+    {
+        startPoint.position = Camera.main.ViewportToWorldPoint(new Vector3(0,0,0));
+        numLeaderboards = leaderboardList.Count;
+        print(numLeaderboards);
+
+        GameObject tempBoard = Instantiate(leaderboardPrefab) as GameObject;
+        leaderboardPrefabBounds = tempBoard.GetComponent<BoxCollider2D>().bounds;
+        DestroyImmediate(tempBoard);
+        print(leaderboardPrefabBounds.size);
+
+        for (int x = 0; x < numLeaderboards; x++) 
+        {
+            GameObject board = Instantiate(leaderboardPrefab) as GameObject;
+            board.transform.parent = canvas.transform;
+
+            if(numLeaderboards > 1)
+            {
+                board.transform.localPosition = new Vector2((x * leaderboardPrefabBounds.size.x) + startPoint.position.x, 0);
+            }
+
+            else
+            {
+                board.transform.localPosition = Vector2.zero;
+            }
+        }
+
+        leaderboards = GameObject.FindGameObjectsWithTag("Leaderboard");
+        print(leaderboards.Length);
+        //print(leaderboards[0].transform.childCount);
+
+        for (int i = 0; i < leaderboards.Length; i++)
+        {
+            for (int j = 0; j < leaderboards[i].transform.childCount; j++) 
+            {
+                Transform child = leaderboards[i].transform.GetChild(j);
+                if(child.gameObject.tag == "PlayerInfo")
+                {
+                    child.gameObject.GetComponent<Text>().text = 
+                    leaderboardList[i].playersInfo[j].rank + " " +
+                    leaderboardList[i].playersInfo[j].playerName + " " + 
+                    leaderboardList[i].playersInfo[j].playerScore; 
+                }
             }
         }
     }
