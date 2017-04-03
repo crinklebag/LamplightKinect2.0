@@ -60,6 +60,8 @@ public class LightController : MonoBehaviour {
 
     [SerializeField] private bool endSong = false;
 
+	private float percentageDone;
+
     // Use this for initialization
     void Start () {
         lightOfMyLife = GetComponent<Light>();
@@ -80,10 +82,11 @@ public class LightController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		percentageDone = audioManager.GetComponent<AudioSource> ().time / clipLength;
         if (startGame)
         {
             lightOfMyLife.color = Color.Lerp(nightLightColour, dayLightColour, lightLerpControl);
+
 
             for (int i = 0; i < bgMaterials.Length; i++) {
                 // Debug.Log("Changing Material Colour");
@@ -92,15 +95,32 @@ public class LightController : MonoBehaviour {
             
             if (lightLerpControl < 1)
             {
-                lightLerpControl += Time.deltaTime / duration;
-                if (lightLerpControl > 0.5f && SceneManager.GetActiveScene().name != "Beach") {
-                    // Start God Rays
-                    startGodRays = true;
-                    // lightMultiplier = 0.8f;
-                    lightMultiplier += Time.deltaTime;
-                }
-            }
 
+				if(percentageDone < 0.25f)
+				{
+					Debug.Log("Step 1");
+					lightLerpControl += Time.deltaTime / (duration * 1.15f);
+				}
+				else if(percentageDone < 0.5f)
+				{
+					Debug.Log("Step 2");
+					lightLerpControl += Time.deltaTime / (duration * 0.85f);
+				}
+				else
+				{
+					Debug.Log("Step 3");
+					lightLerpControl += Time.deltaTime / (duration * 0.55f);
+				}
+
+				//Debug.Log("LLC: " + lightLerpControl);
+
+				if (lightLerpControl > 0.6f && SceneManager.GetActiveScene().name != "Main_Mobile_Beach")
+				{
+					// Start God Rays
+					startGodRays = true;
+				}
+            }
+				
             if (startGodRays) {
                 if (!godRod1.activeSelf) {
                     godRod1.SetActive(true);

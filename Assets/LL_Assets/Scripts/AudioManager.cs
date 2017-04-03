@@ -51,6 +51,7 @@ public class AudioManager : MonoBehaviour
     {
         aSource = this.GetComponent<AudioSource>();
         audioFade = false;
+		setAudioClip ();
     }
 
     void Update()
@@ -60,6 +61,11 @@ public class AudioManager : MonoBehaviour
         beatCheckQuarter = GetQuarterBeat();
         beatCheckEighth = GetEighthBeat();
     }
+
+	public void setAudioClip(){
+		aSource.clip = Resources.Load<AudioClip>("DemoSongs/" + PlayerPrefs.GetString("sceneNumber"));
+		clipLength = aSource.clip.length;
+	}
 
     public void startAudioCoroutine(int index)
     {

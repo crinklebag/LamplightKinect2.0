@@ -26,6 +26,7 @@ public class EvilBug : MonoBehaviour {
     [SerializeField] GameObject sprite;
     [SerializeField] GameObject hitParticle;
 	[SerializeField] GameObject notification;
+	[SerializeField] GameObject redParticles;
 
     [SerializeField] float speed = 1.25f;
     [SerializeField] float rotSpeed = 5.0f;
@@ -66,6 +67,7 @@ public class EvilBug : MonoBehaviour {
 	public void StartBugLyfeCoroutine (float inT, float arT, float outT)
 	{
 		StartCoroutine(BugLyfe(inT, arT, outT));
+		redParticles.SetActive (true);
 	}
 
 	//Controls bug's life cycle
@@ -180,6 +182,7 @@ public class EvilBug : MonoBehaviour {
     {
         glow.SetActive(false);
         sprite.SetActive(false);
+		redParticles.SetActive (false);
 
        GameObject RedParticle = Instantiate(hitParticle) as GameObject;
        RedParticle.transform.position = this.transform.position;
@@ -197,7 +200,7 @@ public class EvilBug : MonoBehaviour {
 		{
 			//Debug.Log("Left Side");
 
-			notification.transform.position = new Vector3(minMoveX + 0.5f, this.transform.position.y, this.transform.position.z);
+			notification.transform.position = new Vector3(minMoveX - 0.5f, this.transform.position.y, this.transform.position.z);
 			if(!isNotificationOn)
 			{
 				isNotificationOn = true;
@@ -208,7 +211,7 @@ public class EvilBug : MonoBehaviour {
 		{
 			//Debug.Log("Right Side");
 
-			notification.transform.position = new Vector3(maxMoveX - 0.5f, this.transform.position.y, this.transform.position.z);
+			notification.transform.position = new Vector3(maxMoveX + 0.5f, this.transform.position.y, this.transform.position.z);
 			if(!isNotificationOn)
 			{
 				isNotificationOn = true;
@@ -219,7 +222,7 @@ public class EvilBug : MonoBehaviour {
 		{
 			//Debug.Log("Top Side");
 
-			notification.transform.position = new Vector3(this.transform.position.x, maxMoveY - 0.5f, this.transform.position.z);
+			notification.transform.position = new Vector3(this.transform.position.x, maxMoveY + 0.5f, this.transform.position.z);
 			if(!isNotificationOn)
 			{
 				isNotificationOn = true;
@@ -230,7 +233,7 @@ public class EvilBug : MonoBehaviour {
 		{
 			//Debug.Log("Top Left Side");
 
-			notification.transform.position = new Vector3(minMoveX + 0.5f, maxMoveY - 0.5f, this.transform.position.z);
+			notification.transform.position = new Vector3(minMoveX - 0.5f, maxMoveY + 0.5f, this.transform.position.z);
 			if(!isNotificationOn)
 			{
 				isNotificationOn = true;
@@ -241,7 +244,7 @@ public class EvilBug : MonoBehaviour {
 		{
 			//Debug.Log("Top Right Side");
 
-			notification.transform.position = new Vector3(maxMoveX - 0.5f, maxMoveY - 0.5f, this.transform.position.z);
+			notification.transform.position = new Vector3(maxMoveX + 0.5f, maxMoveY + 0.5f, this.transform.position.z);
 			if(!isNotificationOn)
 			{
 				isNotificationOn = true;

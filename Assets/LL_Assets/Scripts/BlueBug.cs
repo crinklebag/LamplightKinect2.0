@@ -28,6 +28,8 @@ public class BlueBug : MonoBehaviour {
     [SerializeField] GameObject glow;
     [SerializeField] GameObject sprite;
     [SerializeField] GameObject hitParticle;
+	[SerializeField] GameObject innerGlow;
+	[SerializeField] GameObject greenParticle;
 
     [SerializeField] float speed = 1.25f;
     [SerializeField] float rotSpeed = 5.0f;
@@ -35,6 +37,12 @@ public class BlueBug : MonoBehaviour {
     private bool beenHit = false;
 
     AudioSFX aSFX;
+
+	//Inner glow circle
+	[SerializeField] float innerGlowSpeed = 5.0f;
+	[SerializeField] float innerGlowMaxSize = 2.5f;
+	[SerializeField] float innerGlowMinSize = 1.5f;
+	private bool isInnerGlowing = false;
 
     void Awake ()
 	{
@@ -47,6 +55,13 @@ public class BlueBug : MonoBehaviour {
 		CountTime();
 		RandomPosition();
 		lookAtPosition();
+
+		if (AudioManager.beatCheck && !isInnerGlowing) 
+		{
+			isInnerGlowing = true;
+			StartCoroutine (scaleInnerGlow());
+			greenParticle.SetActive (true);
+		}
 	}
 
 	//Call to start life cycle
@@ -155,7 +170,7 @@ public class BlueBug : MonoBehaviour {
 
             if (other.gameObject.CompareTag("JarTop"))
             {
-                aSFX.playDodo();
+                aSFX.playGreenDoDo();
                 endLyfe();
                 //TODO: Disable Collider? or end lyfe cycle?
 
@@ -170,9 +185,34 @@ public class BlueBug : MonoBehaviour {
     void endLyfe()
     {
         glow.SetActive(false);
+		innerGlow.SetActive(false);
         sprite.SetActive(false);
+		greenParticle.SetActive (false);
 
         GameObject BlueParticle = Instantiate(hitParticle) as GameObject;
         BlueParticle.transform.position = this.transform.position;
     }
+
+	//Scale up and down circle sprite on beat
+	IEnumerator scaleInnerGlow()
+	{
+		float scaleX = innerGlow.transform.localScale.x;
+
+		while(scaleX < innerGlowMaxSize - 0.01f)
+		{
+			scaleX = Mathf.MoveTowards(scaleX, innerGlowMaxSize, Time.deltaTime * innerGlowSpeed);
+			innerGlow.transform.localScale = new Vector3(scaleX, scaleX, 1.0f);
+			yield return null;
+		}
+
+		while(scaleX > innerGlowMinSize + 0.01f)
+		{
+			scaleX = Mathf.MoveTowards(scaleX, innerGlowMinSize, Time.deltaTime * innerGlowSpeed);
+			innerGlow.transform.localScale = new Vector3(scaleX, scaleX, 1.0f);
+			yield return null;
+		}
+
+		isInnerGlowing = false;
+		yield return null;
+	}
 }

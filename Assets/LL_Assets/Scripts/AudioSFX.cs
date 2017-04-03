@@ -7,6 +7,7 @@ public class AudioSFX : MonoBehaviour {
 	[SerializeField] private AudioClip tapClip;
 	[SerializeField] private AudioClip dodoClip;
 	[SerializeField] private AudioClip jarDropClip;
+	[SerializeField] private AudioClip twinkle;
 
 	private AudioSource aSource;
 
@@ -25,7 +26,13 @@ public class AudioSFX : MonoBehaviour {
 	{
 		aSource.clip = dodoClip;
 		aSource.Play();
-		Debug.Log("dodo Played");
+
+	}
+	public void playGreenDoDo(){
+		aSource.clip = twinkle;
+		aSource.Play();
+
+		
 	}
 
 	public void playJarDrop ()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 public class StartButtonScalar : MonoBehaviour {
@@ -35,16 +36,21 @@ public class StartButtonScalar : MonoBehaviour {
 		while (tempScaleX > min + 0.01f) {
 			tempScaleX = Mathf.MoveTowards (tempScaleX, min, Time.deltaTime * speed);
 			text.transform.localScale = new Vector3 (tempScaleX, tempScaleX, 1.0f);
-			Button.transform.localScale = new Vector3 (tempScaleX, tempScaleX, 1.0f);
-			Debug.Log ("DOWN");
+			if (SceneManager.GetActiveScene ().buildIndex == 2) {
+				Button.transform.localScale = new Vector3 (tempScaleX, tempScaleX, 1.0f);
+			}
+			//Debug.Log ("DOWN");
 			yield return null;
 		}
 
 		while(tempScaleX < max - 0.01f){
 			tempScaleX = Mathf.MoveTowards (tempScaleX, max, Time.deltaTime * speed);
 			text.transform.localScale = new Vector3 (tempScaleX, tempScaleX, 1.0f);
-			Button.transform.localScale = new Vector3 (tempScaleX, tempScaleX, 1.0f);
-			Debug.Log ("UP");
+
+			if (SceneManager.GetActiveScene ().buildIndex == 2) {
+				Button.transform.localScale = new Vector3 (tempScaleX, tempScaleX, 1.0f);
+			}
+			//Debug.Log ("UP");
 			yield return null;
 		}
 

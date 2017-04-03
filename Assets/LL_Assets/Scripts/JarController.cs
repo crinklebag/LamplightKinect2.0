@@ -41,7 +41,7 @@ public class JarController : MonoBehaviour {
         Color newColor = new Color(jarHalo.GetComponent<SpriteRenderer>().color.r, jarHalo.GetComponent<SpriteRenderer>().color.g, jarHalo.GetComponent<SpriteRenderer>().color.b, currentAlpha);
         jarHalo.GetComponent<SpriteRenderer>().color = newColor;
             // jarHalo.intensity = bugCount * 0.05f;
-
+		this.GetComponent<JarPulse> ().SetPulse (true);
         if (bugCount == maxBugs) {
             isFull = true;
             timesFilled++;
