@@ -10,7 +10,7 @@ public class IntroAnimController : MonoBehaviour {
 
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		
 		StartCoroutine(StopAnim());
 		menuFly.SetActive (false);
@@ -21,7 +21,7 @@ public class IntroAnimController : MonoBehaviour {
 
 	IEnumerator StopAnim()
 	{
-		yield return new WaitForSecondsRealtime(3);
+		yield return new WaitForSecondsRealtime(2.5f);
 		introAnim.SetActive (false);
 		menuFly.SetActive (true);
 		canvas.SetActive (true);

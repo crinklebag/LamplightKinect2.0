@@ -12,7 +12,7 @@ public class StartButtonScalar : MonoBehaviour {
 	[SerializeField] public float speed;
 	[SerializeField]Text text;
 	[SerializeField]GameObject Button;
-
+	 public float tempScaleX ;
 
 
 
@@ -21,7 +21,9 @@ public class StartButtonScalar : MonoBehaviour {
 	void Start () {
 		
 		StartCoroutine (ScaleText ());
-		this.transform.localScale = new Vector3 (0.75f, 0.75f, 0.0f);
+		//this.transform.localScale = new Vector3 (0.75f, 0.75f, 0.0f);
+		tempScaleX = text.transform.localScale.x;
+		tempScaleX = 0.75f;
 	}
 	
 	// Update is called once per frame
@@ -32,8 +34,8 @@ public class StartButtonScalar : MonoBehaviour {
 
 
 	IEnumerator ScaleText(){
-		float tempScaleX = text.transform.localScale.x;
-		while (tempScaleX > min + 0.01f) {
+		//float tempScaleX = text.transform.localScale.x;
+		/*while (tempScaleX > min + 0.01f) {
 			tempScaleX = Mathf.MoveTowards (tempScaleX, min, Time.deltaTime * speed);
 			text.transform.localScale = new Vector3 (tempScaleX, tempScaleX, 1.0f);
 			if (SceneManager.GetActiveScene ().buildIndex == 2) {
@@ -42,6 +44,7 @@ public class StartButtonScalar : MonoBehaviour {
 			//Debug.Log ("DOWN");
 			yield return null;
 		}
+		*/
 
 		while(tempScaleX < max - 0.01f){
 			tempScaleX = Mathf.MoveTowards (tempScaleX, max, Time.deltaTime * speed);
@@ -54,15 +57,17 @@ public class StartButtonScalar : MonoBehaviour {
 			yield return null;
 		}
 
-	/*	while (tempScaleX > min + 0.01f) {
+		while (tempScaleX > min + 0.01f) {
 			tempScaleX = Mathf.MoveTowards (tempScaleX, min, Time.deltaTime * speed);
 			text.transform.localScale = new Vector3 (tempScaleX, tempScaleX, 1.0f);
-			Button.transform.localScale = new Vector3 (tempScaleX, tempScaleX, 1.0f);
-			Debug.Log ("DOWN");
+			if (SceneManager.GetActiveScene ().buildIndex == 2) {
+				Button.transform.localScale = new Vector3 (tempScaleX, tempScaleX, 1.0f);
+			}
+			//Debug.Log ("DOWN");
 			yield return null;
 		}
 		 
-*/
+
 		StartCoroutine (ScaleText ());
 	}
 }

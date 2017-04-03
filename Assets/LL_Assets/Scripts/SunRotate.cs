@@ -7,7 +7,7 @@ public class SunRotate : MonoBehaviour {
 
 	[SerializeField] private float rotSpeed = 5.0f;
 
-	void Update () 
+	void FixedUpdate () 
 	{
 		this.transform.Rotate(-Vector3.forward * rotSpeed, Space.World);
 	}
