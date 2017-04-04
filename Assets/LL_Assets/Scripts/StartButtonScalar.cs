@@ -23,7 +23,7 @@ public class StartButtonScalar : MonoBehaviour {
 		StartCoroutine (ScaleText ());
 		//this.transform.localScale = new Vector3 (0.75f, 0.75f, 0.0f);
 		tempScaleX = text.transform.localScale.x;
-		tempScaleX = 0.75f;
+		tempScaleX = 0.9f;
 	}
 	
 	// Update is called once per frame

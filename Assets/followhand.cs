@@ -27,10 +27,10 @@ public class followhand : BodySourceView {
 
     int playerZ = 0;
 
-    float minX = -5;
-    float maxX = 5;
-    float minY = -2;
-    float maxY = 2;
+    float minX = -10;
+    float maxX = 10;
+    float minY = -5;
+    float maxY = 5;
 
 
     [SerializeField]GameObject panel;
@@ -141,7 +141,7 @@ public class followhand : BodySourceView {
         // this.transform.LookAt(temp);
         // Debug.Log ("Moving");
         
-        Vector3 targetPos = new Vector3(Mathf.Clamp(temp.x * speed, -8.50F, 8.50F), Mathf.Clamp(temp.y * speed, -4.50F,4.5F), zpos);
+        Vector3 targetPos = new Vector3(Mathf.Clamp(temp.x * speed, minX, maxX), Mathf.Clamp(temp.y * speed, minY, maxY), zpos);
        
         this.transform.position = Vector3.Lerp(this.transform.position, targetPos, Time.smoothDeltaTime);
     }

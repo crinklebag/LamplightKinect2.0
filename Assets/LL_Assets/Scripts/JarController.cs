@@ -40,6 +40,7 @@ public class JarController : MonoBehaviour {
         currentAlpha = currentAlpha + alphaIncreaseValue;
         Color newColor = new Color(jarHalo.GetComponent<SpriteRenderer>().color.r, jarHalo.GetComponent<SpriteRenderer>().color.g, jarHalo.GetComponent<SpriteRenderer>().color.b, currentAlpha);
         jarHalo.GetComponent<SpriteRenderer>().color = newColor;
+        bugGlow.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, bugCount * 0.1f); 
             // jarHalo.intensity = bugCount * 0.05f;
 		this.GetComponent<JarPulse> ().SetPulse (true);
         if (bugCount == maxBugs) {

@@ -69,9 +69,9 @@ public class MenuFly : MonoBehaviour
             // glowlevel = Mathf.Lerp(glowlevel, 0.0f, Time.deltaTime);
             glowing = false;
             col.gameObject.GetComponent<KinectButton>().setFade(true);
-			col.gameObject.GetComponent<StartButtonScalar> ().speed = 0.2f;
+			col.gameObject.GetComponent<StartButtonScalar> ().speed = 0.075f;
 			if (col.gameObject.name == "Start Game") {
-			col.gameObject.GetComponent<StartButtonScalar> ().speed = 0.5f;
+			col.gameObject.GetComponent<StartButtonScalar> ().speed = 0.075f;
 				//text.gameObject.transform.localScale = new Vector3 (1.0f, 1.0f, 0.0f);
 			}
 

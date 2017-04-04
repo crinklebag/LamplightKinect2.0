@@ -50,6 +50,6 @@ public class FunFactController : MonoBehaviour
     private IEnumerator Wait()
     {
         yield return new WaitForSeconds(waitTime);
-		this.GetComponent<SceneLoad>().LoadScene("MockGameScene");
+		this.GetComponent<SceneLoad>().LoadScene("MainMenu");
     }
 }

@@ -114,7 +114,7 @@ public class LightController : MonoBehaviour {
 
 				//Debug.Log("LLC: " + lightLerpControl);
 
-				if (lightLerpControl > 0.6f && SceneManager.GetActiveScene().name != "Main_Mobile_Beach")
+				if (lightLerpControl > 0.6f && SceneManager.GetActiveScene().name != "Beach")
 				{
 					// Start God Rays
 					startGodRays = true;
