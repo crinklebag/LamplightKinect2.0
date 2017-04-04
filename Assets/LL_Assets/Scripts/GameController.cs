@@ -67,9 +67,9 @@ public class GameController : MonoBehaviour
     public void StartGameAfterCountdown()
     {
         // IF we are playing ini editor manually set a song to play
-        if (Application.isEditor) {
+        /*if (Application.isEditor) {
             PlayerPrefs.SetString("sceneNumber", "Dream Giver");
-        }
+        }*/
 
         // Enable the player script
         player.GetComponent<Net>().enabled = true;

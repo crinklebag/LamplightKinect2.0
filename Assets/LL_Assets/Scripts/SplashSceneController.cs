@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class SplashSceneController : MonoBehaviour {
-
+    /*
     public enum SplashScreenState { SHOW_HANDSOMEDOG_LOGO, SHOW_HANDSOMEDOG_GLOW, HIDE_HANDSOMEDOG_GLOW, HIDE_HANDSOMEDOG_LOGO,
                                     SHOW_ISTHESOUL_LOGO, SHOW_ISTHESOUL_GLOW, HIDE_ISTHESOUL_LOGO, HIDE_ISTHESOUL_GLOW };
     SplashScreenState currentState;
-
+    */
     [SerializeField] Image handsomeDogLogo;
     [SerializeField] Image handsomeDogGlow;
     [SerializeField] Image isthesoulDogLogo;
@@ -16,6 +16,106 @@ public class SplashSceneController : MonoBehaviour {
 
     [SerializeField] float speed;
 
+    void Start()
+    {
+        StartCoroutine(fadeRoutine());
+    }
+
+    IEnumerator fadeRoutine()
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            yield return StartCoroutine(fadeIn(i));
+            yield return StartCoroutine(fadeOut(i));
+        }
+
+        this.GetComponent<SceneLoad>().LoadScene("MainMenu");
+
+        yield return null;
+    }
+
+
+    IEnumerator fadeIn(int index)
+    {
+        float tempLogo;
+        float tempGlow;
+        if (index == 0)
+        {
+            tempLogo = handsomeDogLogo.color.a;
+            tempGlow = handsomeDogGlow.color.a;
+            while (tempLogo < 0.999f)
+            {
+                tempLogo = Mathf.MoveTowards(tempLogo, 1.0f, Time.deltaTime * speed);
+                handsomeDogLogo.color = new Color(1.0f, 1.0f, 1.0f, tempLogo);
+                yield return null;
+            }
+            while (tempGlow < 0.999f)
+            {
+                tempGlow = Mathf.MoveTowards(tempGlow, 1.0f, Time.deltaTime * speed);
+                handsomeDogGlow.color = new Color(1.0f, 1.0f, 1.0f, tempGlow);
+                yield return null;
+            }
+        }
+        else
+        {
+            tempLogo = isthesoulDogLogo.color.a;
+            tempGlow = isthesoulDogGlow.color.a;
+            while (tempLogo < 0.999f)
+            {
+                tempLogo = Mathf.MoveTowards(tempLogo, 1.0f, Time.deltaTime * speed);
+                isthesoulDogLogo.color = new Color(1.0f, 1.0f, 1.0f, tempLogo);
+                yield return null;
+            }
+            while (tempGlow < 0.999f)
+            {
+                tempGlow = Mathf.MoveTowards(tempGlow, 1.0f, Time.deltaTime * speed);
+                isthesoulDogGlow.color = new Color(1.0f, 1.0f, 1.0f, tempGlow);
+                yield return null;
+            }
+        }
+
+        yield return null;
+    }
+
+    IEnumerator fadeOut(int index)
+    {
+        Debug.Log("fade out");
+
+        float tempLogo;
+        float tempGlow;
+        if (index == 0)
+        {
+            tempLogo = handsomeDogLogo.color.a;
+            tempGlow = handsomeDogGlow.color.a;
+            while (tempLogo > 0.001f)
+            {
+                tempLogo = Mathf.MoveTowards(tempLogo, 0.0f, Time.deltaTime * speed);
+                handsomeDogLogo.color = new Color(1.0f, 1.0f, 1.0f, tempLogo);
+                handsomeDogGlow.color = new Color(1.0f, 1.0f, 1.0f, tempLogo);
+                yield return null;
+            }
+        }
+        else
+        {
+            tempLogo = isthesoulDogLogo.color.a;
+            tempGlow = isthesoulDogGlow.color.a;
+            while (tempLogo > 0.001f)
+            {
+                tempLogo = Mathf.MoveTowards(tempLogo, 0.0f, Time.deltaTime * speed);
+                isthesoulDogLogo.color = new Color(1.0f, 1.0f, 1.0f, tempLogo);
+                isthesoulDogGlow.color = new Color(1.0f, 1.0f, 1.0f, tempLogo);
+                yield return null;
+            }
+        }
+
+        yield return null;
+    }
+
+
+
+
+
+    /*
     bool canFade = false;
 
     float startTime;
@@ -144,5 +244,5 @@ public class SplashSceneController : MonoBehaviour {
         } else if (currentState == SplashScreenState.SHOW_ISTHESOUL_GLOW) {
             currentState = SplashScreenState.HIDE_ISTHESOUL_GLOW;
         }
-    }
+    }*/
 }

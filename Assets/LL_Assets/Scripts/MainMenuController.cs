@@ -189,28 +189,35 @@ public class MainMenuController : MonoBehaviour {
                 lerpColorTime = 0;
                 //brighterBarsColors[2] = Color.white;
 
+
                 string sceneToSave = "";
 
                 switch (name)
                 {
                     case "Seasons Change":
                         sceneToSave = "Seasons Change";
-                     //   Debug.Log("Seasons change song choose11");
+                        Debug.Log("Season Change");
                         break;
                     case "Get Free":
                         sceneToSave = "Get Free";
+                        Debug.Log("Get Free");
+
                         break;
                     case "Dream Giver":
                         sceneToSave = "Dream Giver";
+                        Debug.Log("Dream Giver");
+
                         break;
                     case "Spirit Speaker":
                         sceneToSave = "Spirit Speaker";
+                        Debug.Log("Spirit Speaker");
+
                         break;
                     default:
                         break;
                 }
 
-            //    Debug.Log("Song found: " + sceneToSave);
+                Debug.Log("Song found: " + sceneToSave);
 
                 PlayerPrefs.SetString("sceneNumber", sceneToSave);
                 PlayerPrefs.Save();
