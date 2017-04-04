@@ -196,7 +196,7 @@ public class UI : MonoBehaviour
 
         if (!calledCountUpCoroutine)
         {
-            Debug.Log("Counting Up Score");
+          //  Debug.Log("Counting Up Score");
             StartCoroutine("CountUpScore");
             calledCountUpCoroutine = true;
         }
@@ -236,7 +236,7 @@ public class UI : MonoBehaviour
         }
 
         tempScoreCounter = totalScore;
-        exitButtonFG.SetActive(true);
+        //exitButtonFG.SetActive(true);
 
 		yield return new WaitForSeconds(FinalScoreFinishWait);
 

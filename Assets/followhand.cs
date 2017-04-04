@@ -62,7 +62,7 @@ public class followhand : BodySourceView {
         if (bodies == null)
         {
             // NOTIFY PLAYER SKELETON IS BEING BUILT
-            Debug.Log("bodies null");
+          //  Debug.Log("bodies null");
             lostSkeleton = true;
 
 			if (SceneManager.GetActiveScene().buildIndex != 2) {
@@ -150,7 +150,7 @@ public class followhand : BodySourceView {
 		yield return new WaitForSeconds (0.1f);
 		if (lostSkeleton == true) {
 			// Keep notifying the player
-			Debug.Log ("no skeleton , buildin it");
+			//Debug.Log ("no skeleton , buildin it");
 
 			panel.SetActive (true);
 		}

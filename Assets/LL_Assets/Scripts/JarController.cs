@@ -47,7 +47,7 @@ public class JarController : MonoBehaviour {
             isFull = true;
             timesFilled++;
             gameController.FillJar();
-            Debug.Log("Jar Filled");
+         //   Debug.Log("Jar Filled");
         }
     }
 

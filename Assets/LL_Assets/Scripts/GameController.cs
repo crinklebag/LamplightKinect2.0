@@ -188,7 +188,7 @@ public class GameController : MonoBehaviour
 
         if (jarCurrentDamage <= jarDamageLimit)
         {
-            Debug.Log("Changing net mat");
+           // Debug.Log("Changing net mat");
             uiController.setJarImage(jarCurrentDamage);
             net.material.SetTexture("_MainTex", netStates[jarCurrentDamage]);
             player.GetComponent<followhand>().FlashJar();

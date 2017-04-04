@@ -195,7 +195,7 @@ public class MainMenuController : MonoBehaviour {
                 {
                     case "Seasons Change":
                         sceneToSave = "Seasons Change";
-                        Debug.Log("Seasons change song choose11");
+                     //   Debug.Log("Seasons change song choose11");
                         break;
                     case "Get Free":
                         sceneToSave = "Get Free";
@@ -210,7 +210,7 @@ public class MainMenuController : MonoBehaviour {
                         break;
                 }
 
-                Debug.Log("Song found: " + sceneToSave);
+            //    Debug.Log("Song found: " + sceneToSave);
 
                 PlayerPrefs.SetString("sceneNumber", sceneToSave);
                 PlayerPrefs.Save();
@@ -239,8 +239,8 @@ public class MainMenuController : MonoBehaviour {
     public void LoadScene()
     {
         //
-        Debug.Log(PlayerPrefs.GetInt("bgNumber"));
-        Debug.Log(PlayerPrefs.GetString("sceneNumber"));
+      //  Debug.Log(PlayerPrefs.GetInt("bgNumber"));
+      //  Debug.Log(PlayerPrefs.GetString("sceneNumber"));
 
         if (PlayerPrefs.GetInt("bgNumber") != -1 && PlayerPrefs.GetString("sceneNumber") != "")
         {
