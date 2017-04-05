@@ -185,6 +185,9 @@ public class UI : MonoBehaviour
         {
             totalScoreMulFG.text = score.ToString() + " x " + multiplier.ToString();
             totalScoreFG.text = tempScoreCounter.ToString();
+            if (multiplier == 0) {
+                multiplier = 1;
+            }
             totalScore = score * multiplier;
         }
         else
