@@ -82,7 +82,7 @@ public class followhand : BodySourceView {
 
 			if (body.IsTracked) {
 
-				if (SceneManager.GetActiveScene ().buildIndex != 2) {
+				if (SceneManager.GetActiveScene ().buildIndex != 2 && SceneManager.GetActiveScene().buildIndex != 7) {
 					
 				
 					if (!hasStarted) {
@@ -92,6 +92,7 @@ public class followhand : BodySourceView {
 						zpos = -5.0f;
 
 					}
+
 				}
 
 

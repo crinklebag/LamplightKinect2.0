@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 /*
  
@@ -170,12 +171,15 @@ public class MenuFly : MonoBehaviour
 
             if (Tempplaytime == 0)
             {
-                countdown.text = "Play";
+               // countdown.text = "Play";
+                if (SceneManager.GetActiveScene().buildIndex != 2)
+                {
+                    GameObject.FindGameObjectWithTag("UIController").GetComponent<NewCredits>().fadeToMenu();
+                    //SceneManager.LoadScene("MainMenu");
+                }
 
             }
 
         }
-
     }
-
 }

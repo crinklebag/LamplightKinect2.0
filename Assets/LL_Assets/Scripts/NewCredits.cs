@@ -11,26 +11,34 @@ public class NewCredits : MonoBehaviour {
 	[SerializeField] private GameObject scrollingTxt;
 	[SerializeField] private GameObject lamplightAnimation;
 	[SerializeField] private SpriteRenderer lamplightAnimImage;
+    [SerializeField] private GameObject MenuButton;
+    [SerializeField] private Image toMenuFade;
 
-	[SerializeField] private float textFadeInSpeed = 5.0f;
+    [SerializeField] private float textFadeInSpeed = 5.0f;
 	[SerializeField] private float textFadeOutSpeed = 5.0f;
 	[SerializeField] private float scrollingSpeed = 2.5f;
+    [SerializeField] private float toMenuFadeSpeed = 2.5f;
 
 	[SerializeField] private float endHeight = 1000.0f;
 
 	[SerializeField] private float panelUpTime = 2.5f;
 	[SerializeField] private float animWaitTime = 2.45f;
 
-	void Awake()
+    private bool toMenuIsFading = false;
+
+
+    void Awake()
 	{
+        
 		for(int i = 0; i < numOfPanels; i++)
 		{
 			img[i].color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
 			img[i].gameObject.SetActive(false);
 		}
-
-		lamplightAnimImage.gameObject.SetActive(false);
+        MenuButton.SetActive(false);
+        lamplightAnimImage.gameObject.SetActive(false);
 		lamplightAnimation.SetActive(false);
+        toMenuFade.gameObject.SetActive(false);
 
 		StartCoroutine(runCredits());
 	}
@@ -41,6 +49,7 @@ public class NewCredits : MonoBehaviour {
 		yield return StartCoroutine(fadeAnimPanel());
 		yield return StartCoroutine(fadePanels());
 		yield return StartCoroutine(rollTheRest());
+
 
 		this.GetComponent<SceneLoad>().LoadScene("MainMenu");
 
@@ -73,7 +82,7 @@ public class NewCredits : MonoBehaviour {
 		}
 
 		lamplightAnimImage.gameObject.SetActive(false);
-
+        MenuButton.SetActive(true);
 		yield return null;
 	}
 
@@ -140,5 +149,33 @@ public class NewCredits : MonoBehaviour {
 
 		yield return null;
 	}
+
+    public void fadeToMenu()
+    {
+        if (!toMenuIsFading)
+        {
+            toMenuFade.gameObject.SetActive(true);
+            StartCoroutine(fadeEm());
+        }
+    }
+
+    IEnumerator fadeEm()
+    {
+        float temp = toMenuFade.color.a;
+
+        while (temp < 0.999f)
+        {
+            temp = Mathf.MoveTowards(temp, 1.0f, Time.deltaTime * toMenuFadeSpeed);
+
+            toMenuFade.color = new Color(0.0f, 0.0f, 0.0f, temp);
+
+            yield return null;
+        }
+
+        toMenuIsFading = false;
+        this.GetComponent<SceneLoad>().LoadScene("MainMenu");
+
+        yield return null;
+    }
 
 }
